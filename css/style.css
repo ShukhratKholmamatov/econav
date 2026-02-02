@@ -1,0 +1,22 @@
+:root {
+            --bmb-teal: #26B1B1;
+            --bmb-navy: #0D324D;
+        }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .bg-teal-brand { background-color: var(--bmb-teal); }
+        .text-teal-brand { color: var(--bmb-teal); }
+        .bg-navy-brand { background-color: var(--bmb-navy); }
+        .border-teal-brand { border-color: var(--bmb-teal); }
+        
+        /* Animation for the seed growth */
+        @keyframes grow {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .animate-grow { animation: grow 1.5s ease-out forwards; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMB EcoNav | Innovative Agricultural Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        :root {
+            --bmb-teal: #26B1B1;
+            --bmb-navy: #0D324D;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            scroll-behavior: smooth;
+            cursor: none; 
+            background-color: #fcfdfd;
+        }
+
+        /* Custom Seed Cursor */
+        #seed-cursor {
+            width: 20px;
+            height: 20px;
+            background: var(--bmb-teal);
+            border-radius: 50% 0 50% 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: rotate(-45deg);
+            transition: transform 0.08s ease-out;
+            box-shadow: 0 0 10px rgba(38, 177, 177, 0.4);
+        }
+
+        .bg-teal-brand { background-color: var(--bmb-teal); }
+        .text-teal-brand { color: var(--bmb-teal); }
+        .bg-navy-brand { background-color: var(--bmb-navy); }
+        .text-navy-brand { color: var(--bmb-navy); }
+
+        .catalog-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(13, 50, 77, 0.15);
+        }
+        
+        .logo-img {
+            max-height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <div id="seed-cursor"></div>
+
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-lg border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center">
+                <img src="/assets/logo.png" alt="BMB ECO NAV Logo" class="logo-img">
+            </a>
+            
+            <div class="flex items-center gap-4">
+                <div class="flex items-center bg-slate-100 rounded-full px-3 py-1 border border-slate-200">
+                    <i data-lucide="globe" class="w-3 h-3 mr-2 text-slate-500"></i>
+                    <select id="langSwitcher" onchange="changeLanguage(this.value)" class="bg-transparent font-bold text-[11px] outline-none cursor-pointer uppercase">
+                        <option value="uz">UZ</option>
+                        <option value="ru">RU</option>
+                        <option value="en">EN</option>
+                    </select>
+                </div>
+                <a href="tel:+998770000233" class="bg-teal-brand text-white p-2 rounded-full md:px-5 md:py-2 transition hover:opacity-90">
+                    <span class="hidden md:inline text-sm font-bold">Contact Us</span>
+                    <i data-lucide="phone" class="md:hidden w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-40 pb-20 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            <div>
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="h-[2px] w-8 bg-teal-brand"></span>
+                    <span class="text-teal-brand font-bold text-xs uppercase tracking-widest" id="hero-tag">BMB Holding Ecosystem</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black text-navy-brand leading-[1.1] mb-8" id="hero-title">
+                    Келажак – сифатли <span class="text-teal-brand">уруғдан</span> бошланади.
+                </h1>
+                <p class="text-xl text-slate-500 mb-10 leading-relaxed max-w-lg" id="hero-desc">
+                    Сифатли уруғ етиштириш, калибрлаш ва дорилаш бўйича замонавий ечимлар маркази.
+                </p>
+                <a href="#catalog" class="inline-flex items-center gap-3 bg-navy-brand text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-2xl transition hover:bg-slate-800">
+                    <i data-lucide="sprout"></i> <span id="btn-catalog">Catalog</span>
+                </a>
+            </div>
+            <div class="relative">
+                <div class="absolute -top-20 -right-20 w-80 h-80 bg-teal-brand/10 rounded-full blur-[100px]"></div>
+                <img src="https://images.unsplash.com/photo-1530507629858-e4977d30e9e0?auto=format&fit=crop&q=80&w=1000" class="rounded-[60px] shadow-3xl border-[16px] border-white h-[550px] w-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-slate-900">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="aspect-video rounded-[40px] overflow-hidden shadow-2xl border-4 border-white/10">
+                <iframe class="w-full h-full" src="https://www.youtube.com/embed/EC17XunxGz0" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <section id="catalog" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+                <div>
+                    <h2 class="text-4xl font-black text-navy-brand uppercase tracking-tighter" id="cat-header">Product Catalog</h2>
+                    <div class="h-1 w-20 bg-teal-brand mt-2"></div>
+                </div>
+                <p class="text-slate-400 max-w-sm" id="cat-sub">Expertly calibrated and treated seeds for high-yield harvests.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-10" id="catalog-grid">
+                </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-slate-50 border-y border-slate-200">
+        <div class="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 text-center md:text-left">
+            <div class="relative">
+                <div class="absolute inset-0 bg-teal-brand rounded-full blur-2xl opacity-20"></div>
+                <img src="/assets/sobir_aka.webp" alt="Director" class="relative w-48 h-48 rounded-full object-cover border-4 border-white shadow-xl">
+            </div>
+            <div>
+                <h3 class="text-3xl font-black text-navy-brand mb-2">Эгамбердиев Собир Йўлдошевич</h3>
+                <p class="text-teal-brand font-bold text-lg mb-4" id="dir-title">Director of BMB EcoNav</p>
+                <p class="text-slate-500 italic leading-relaxed" id="dir-desc">
+                    Қишлоқ хўжалиги бўйича фалсафа фанлари номзоди, кўп йиллик амалий ва илмий тажрибага эга мутахассис.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="pt-24 pb-12 bg-white px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-12 mb-20">
+                <div class="md:col-span-1">
+                    <img src="/assets/logo.png" alt="Logo" class="logo-img mb-6">
+                    <p class="text-slate-400 text-sm leading-relaxed" id="footer-bio">
+                        BMB EcoNav – BMB Holding’нинг аграр соҳадаги инновацион қадами. Келажак – сифатли уруғдан бошланади.
+                    </p>
+                </div>
+                <div class="md:col-span-2 grid md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-navy-brand uppercase tracking-widest text-xs">Contacts</h4>
+                        <p class="text-sm flex items-center gap-3"><i data-lucide="map-pin" class="text-teal-brand w-4 h-4"></i> Ташкент, Яккасарайский район, ул. Малой Кольцевой, д. 14-Б</p>
+                        <p class="text-sm flex items-center gap-3"><i data-lucide="mail" class="text-teal-brand w-4 h-4"></i> info@bmb-holdin.uz</p>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-navy-brand uppercase tracking-widest text-xs">Phone Numbers</h4>
+                        <p class="text-lg font-black text-navy-brand">+998 77 000 02 33</p>
+                        <p class="text-lg font-black text-navy-brand">+998 95 014 44 41</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-100 pt-10 text-center text-[10px] text-slate-300 uppercase tracking-widest">
+                © 2026 BMB ECO NAV | All Rights Reserved
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor Movement
+        const cursor = document.getElementById('seed-cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Seed Data with Warnings
+        const products = [
+            {
+                id: "pumpkin",
+                names: { uz: "Qovoq", ru: "Тыква", en: "Pumpkin" },
+                variety: "BOL QOVOG‘I ELITE",
+                info: "Batch 6652098 | Packed 01-2026 | 100 g",
+                coating: "Coated with Fludioxonil | Exp: 02-2028",
+                img: "/assets/pumpkin.jpg"
+            },
+            {
+                id: "cucumber",
+                names: { uz: "Bodring", ru: "Огурец", en: "Cucumber" },
+                variety: "ELEGANT F1",
+                info: "Batch 6652098 | Packed 01-2026 | 1000 seeds",
+                coating: "Coated with Fludioxonil | Exp: 02-2028",
+                img: "/assets/cucumber.jpg"
+            },
+            {
+                id: "tomato",
+                names: { uz: "Pomidor", ru: "Помидор", en: "Tomato" },
+                variety: "7424 ELITE",
+                info: "Batch 6652098 | Packed 01-2026 | 1000 seeds",
+                coating: "Coated with Fludioxonil | Exp: 02-2028",
+                img: "/assets/tomato.jpg"
+            },
+            {
+                id: "pepper",
+                names: { uz: "Bulg‘or qalampiri", ru: "Паприка", en: "Bell Pepper" },
+                variety: "YOQUD F1",
+                info: "Batch 6652098 | Packed 01-2026 | 50gr",
+                coating: "Coated with Fludioxonil | Exp: 02-2028",
+                img: "/assets/pepper.jpg"
+            }
+            // Add more as needed...
+        ];
+
+        const dict = {
+            uz: {
+                heroTag: "BMB Holding Экотизими",
+                heroTitle: "Келажак – сифатли <span class='text-teal-brand'>уруғдан</span> бошланади.",
+                heroDesc: "Сифатли уруғ етиштириш, калибрлаш ва дорилаш бўйича замонавий ечимлар маркази.",
+                btnCatalog: "Каталог",
+                catHeader: "Маҳсулотлар Каталоги",
+                catSub: "Юқори унувчан ва барқарор ҳосил берувчи уруғлар.",
+                dirTitle: "BMB EcoNav Директори",
+                recom: "ТАВСИЯЛАР: 1. Экиш вақти очинг. 2. Оралиқ масофани сақланг. 3. Намликни назорат қилинг."
+            },
+            ru: {
+                heroTag: "Экосистема BMB Holding",
+                heroTitle: "Будущее начинается с качественных <span class='text-teal-brand'>семян</span>.",
+                heroDesc: "Центр современных решений по выращиванию, калибровке и протравливанию семян.",
+                btnCatalog: "Каталог",
+                catHeader: "Каталог Продукции",
+                catSub: "Семена с высокой всхожестью и стабильной урожайностью.",
+                dirTitle: "Директор BMB EcoNav",
+                recom: "РЕКОМЕНДАЦИИ: 1. Открывать при посадке. 2. Соблюдать интервалы. 3. Контролировать влажность."
+            },
+            en: {
+                heroTag: "BMB Holding Ecosystem",
+                heroTitle: "The Future Begins with Quality <span class='text-teal-brand'>Seeds</span>.",
+                heroDesc: "Center for modern solutions in seed production, calibration, and treatment.",
+                btnCatalog: "Catalog",
+                catHeader: "Product Catalog",
+                catSub: "Seeds with high germination and stable yields.",
+                dirTitle: "Director of BMB EcoNav",
+                recom: "RECOM: 1. Open at planting time. 2. Maintain intervals. 3. Control soil moisture."
+            }
+        };
+
+        function changeLanguage(lang) {
+            const t = dict[lang];
+            document.getElementById('hero-tag').innerText = t.heroTag;
+            document.getElementById('hero-title').innerHTML = t.heroTitle;
+            document.getElementById('hero-desc').innerText = t.heroDesc;
+            document.getElementById('btn-catalog').innerText = t.btnCatalog;
+            document.getElementById('cat-header').innerText = t.catHeader;
+            document.getElementById('cat-sub').innerText = t.catSub;
+            document.getElementById('dir-title').innerText = t.dirTitle;
+            renderCatalog(lang);
+        }
+
+        function renderCatalog(lang) {
+            const container = document.getElementById('catalog-grid');
+            container.innerHTML = products.map(p => `
+                <div class="catalog-card group bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-sm transition-all duration-500">
+                    <div class="h-64 overflow-hidden">
+                        <img src="${p.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                    </div>
+                    <div class="p-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-teal-brand font-black text-2xl uppercase">${p.names[lang]}</h3>
+                                <p class="text-navy-brand font-bold text-lg">${p.variety}</p>
+                            </div>
+                        </div>
+                        <div class="text-[10px] font-mono text-slate-400 mb-6 bg-slate-50 p-4 rounded-2xl">
+                            ${p.info} <br> ${p.coating}
+                        </div>
+                        <p class="text-[11px] leading-relaxed text-slate-500 italic">
+                            ${dict[lang].recom}
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Initialize
+        changeLanguage('uz');
+        lucide.createIcons();
+    </script>
+</body>
+</html>
