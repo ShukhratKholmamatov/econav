@@ -8,319 +8,136 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        
-        :root {
-            --bmb-teal: #26B1B1;
-            --bmb-navy: #0D324D;
-            --telegram-color: #0088cc;
-            --instagram-color: #E4405F;
-        }
-
-        .dark {
-            --bg-body: #081a26;
-            --bg-card: #0D324D;
-            --text-main: #f1f5f9;
-        }
-
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            scroll-behavior: smooth;
-            cursor: none; 
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        #seed-cursor {
-            width: 20px;
-            height: 20px;
-            background: var(--bmb-teal);
-            border-radius: 50% 0 50% 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 10000;
-            transform: rotate(-45deg);
-            transition: transform 0.08s ease-out;
-            box-shadow: 0 0 15px rgba(38, 177, 177, 0.5);
-        }
-
+        :root { --bmb-teal: #26B1B1; --bmb-navy: #0D324D; }
+        .dark { --bg-body: #081a26; --bg-card: #0D324D; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; cursor: none; transition: background-color 0.3s; }
+        #seed-cursor { width: 20px; height: 20px; background: var(--bmb-teal); border-radius: 50% 0 50% 50%; position: fixed; pointer-events: none; z-index: 10000; transform: rotate(-45deg); transition: transform 0.08s; box-shadow: 0 0 15px rgba(38, 177, 177, 0.5); }
         .bg-teal-brand { background-color: var(--bmb-teal); }
         .text-teal-brand { color: var(--bmb-teal); }
         .bg-navy-brand { background-color: var(--bmb-navy); }
-        .text-navy-brand { color: var(--bmb-navy); }
-
-        .dark #hero-title { color: #ffffff !important; }
-        
-        .catalog-card:hover { transform: translateY(-8px); cursor: pointer; }
-        .logo-img { max-height: 50px; width: auto; object-fit: contain; }
-
         .dark body { background-color: #081a26; color: #f1f5f9; }
         .dark nav { background-color: rgba(8, 26, 38, 0.9); border-color: #1e293b; }
         .dark .bg-white { background-color: #0D324D; }
-        .dark .text-slate-900 { color: #f1f5f9; }
-        .dark .bg-slate-50 { background-color: #0a2333; }
-        
-        .text-telegram { color: var(--telegram-color); }
-        .text-instagram { color: var(--instagram-color); }
-
-        @keyframes modalFade {
-            from { opacity: 0; transform: scale(0.9) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .modal-animate { animation: modalFade 0.3s ease-out forwards; }
+        .page-fade { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .dark select option { background-color: #0D324D; color: white; }
+        .active-nav { color: var(--bmb-teal) !important; border-bottom: 2px solid var(--bmb-teal); }
     </style>
 </head>
 <body class="bg-white text-slate-900 overflow-x-hidden">
 
     <div id="seed-cursor"></div>
 
-    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-lg border-b border-slate-100 transition-all">
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-lg border-b border-slate-100 dark:border-slate-800 transition-all">
         <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-            <a href="#" class="flex items-center">
-                <img src="/assets/logo.png" alt="BMB ECO NAV Logo" class="logo-img">
+            <a href="javascript:void(0)" onclick="navigateTo('home')" class="flex items-center">
+                <img src="/assets/logo.png" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
             </a>
             
-            <div class="flex items-center gap-4">
-                <div class="hidden md:flex gap-4 mr-2">
-                    <a href="https://t.me/bmbeconav" target="_blank" class="hover:scale-110 transition"><i data-lucide="send" class="w-5 h-5 text-telegram"></i></a>
-                    <a href="https://www.instagram.com/bmbeconav/" target="_blank" class="hover:scale-110 transition"><i data-lucide="instagram" class="w-5 h-5 text-instagram"></i></a>
-                </div>
+            <div class="hidden md:flex items-center gap-8 font-bold text-sm">
+                <a href="javascript:void(0)" onclick="navigateTo('home')" class="hover:text-teal-brand transition dark:text-white" id="nav-home">Bosh sahifa</a>
+                <a href="javascript:void(0)" onclick="navigateTo('about')" class="hover:text-teal-brand transition dark:text-white" id="nav-about">Kompaniya</a>
+                <a href="javascript:void(0)" onclick="navigateTo('catalog')" class="hover:text-teal-brand transition dark:text-white" id="nav-catalog">Katalog</a>
+            </div>
 
+            <div class="flex items-center gap-3">
                 <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition">
                     <i data-lucide="moon" id="theme-icon" class="w-5 h-5 text-teal-brand"></i>
                 </button>
-
-                <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3 py-1 border border-slate-200 dark:border-slate-700">
-                    <i data-lucide="globe" class="w-3 h-3 mr-2 text-slate-500"></i>
-                    <select id="langSwitcher" onchange="changeLanguage(this.value)" class="bg-transparent font-bold text-[11px] outline-none cursor-pointer uppercase dark:text-white">
-                        <option value="uz">UZ</option>
-                        <option value="ru">RU</option>
-                        <option value="en">EN</option>
-                    </select>
-                </div>
-                
-                <a href="tel:+998770000233" class="bg-teal-brand text-white p-2 rounded-full md:px-5 md:py-2 transition hover:opacity-90">
-                    <span class="hidden md:inline text-sm font-bold" id="nav-contact">Bog'lanish</span>
-                    <i data-lucide="phone" class="md:hidden w-5 h-5"></i>
-                </a>
+                <select id="langSwitcher" onchange="changeLanguage(this.value)" class="bg-slate-100 dark:bg-slate-800 font-bold text-[11px] p-2 rounded-lg outline-none uppercase dark:text-white">
+                    <option value="uz">UZ</option><option value="ru">RU</option><option value="en">EN</option>
+                </select>
+                <a href="tel:+998770000233" class="bg-teal-brand text-white px-4 py-2 rounded-full text-xs font-bold hidden sm:block shadow-lg">Bog'lanish</a>
             </div>
         </div>
     </nav>
 
-    <section class="relative pt-40 pb-20 px-6">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+    <main id="page-content" class="min-h-screen pt-24"></main>
+
+    <footer class="pt-20 pb-10 bg-white dark:bg-[#081a26] px-6 border-t dark:border-slate-800">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
             <div>
-                <div class="flex items-center gap-2 mb-6">
-                    <span class="h-[2px] w-8 bg-teal-brand"></span>
-                    <span class="text-teal-brand font-bold text-xs uppercase tracking-widest" id="hero-tag">BMB Holding Ecosystem</span>
+                <img src="/assets/logo.png" class="h-10 mb-6">
+                <p class="text-xs text-slate-400 dark:text-slate-500 mb-6" id="footer-bio">BMB EcoNav – BMB Holding’ning agrar sohadagi инновацион қадами.</p>
+                <div class="flex gap-4">
+                    <a href="https://t.me/bmbeconav" class="text-[#0088cc] hover:scale-110 transition"><i data-lucide="send"></i></a>
+                    <a href="https://instagram.com/bmbeconav" class="text-[#E4405F] hover:scale-110 transition"><i data-lucide="instagram"></i></a>
                 </div>
-                <h1 class="text-5xl md:text-7xl font-black text-navy-brand dark:text-white leading-[1.1] mb-8" id="hero-title">
-                    Келажак – сифатли <span class="text-teal-brand">уруғдан</span> бошланади.
-                </h1>
-                <p class="text-xl text-slate-500 dark:text-slate-400 mb-10 leading-relaxed max-w-lg" id="hero-desc">
-                    Сифатли уруғ етиштириш, калибрлаш ва дорилаш бўйича замонавий ечимлар маркази.
-                </p>
-                <a href="#catalog" class="inline-flex items-center gap-3 bg-navy-brand text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-2xl transition hover:bg-teal-brand hover:scale-105">
-                    <i data-lucide="sprout"></i> <span id="btn-catalog">Katalog</span>
-                </a>
             </div>
-            <div class="relative group">
-                <div class="absolute -top-10 -right-10 w-64 h-64 bg-teal-brand/10 rounded-full blur-[80px]"></div>
-                <img src="/assets/farmmain.jpg" class="rounded-[60px] shadow-3xl border-[16px] border-white dark:border-slate-800 h-[550px] w-full object-cover">
+            <div class="space-y-4">
+                <h4 class="font-black text-navy-brand dark:text-teal-brand uppercase text-xs">Aloqa</h4>
+                <p class="text-sm dark:text-slate-400">Toshkent, Yakkasaroy tumani, Kichik Halqa yo'li, 14-B</p>
+                <p class="text-sm font-bold dark:text-white">info@bmb-holding.uz</p>
+            </div>
+            <div class="space-y-4">
+                <h4 class="font-black text-navy-brand dark:text-teal-brand uppercase text-xs">Telefonlar</h4>
+                <p class="text-lg font-black dark:text-white">+998 77 000 02 33</p>
+                <p class="text-lg font-black dark:text-white">+998 95 014 44 41</p>
             </div>
         </div>
-    </section>
-
-    <section class="py-20 bg-slate-900">
-        <div class="max-w-5xl mx-auto px-6 text-center">
-            <h2 class="text-white text-3xl font-bold mb-10" id="video-title">Biz haqimizda video</h2>
-            <div class="aspect-video rounded-[40px] overflow-hidden shadow-2xl border-4 border-white/10">
-                <iframe class="w-full h-full" src="https://www.youtube.com/embed/EC17XunxGz0" frameborder="0" allowfullscreen></iframe>
-            </div>
+        <div class="mt-16 text-center text-[10px] text-slate-400 uppercase tracking-widest border-t pt-8 dark:border-slate-800">
+            © 2026 BMB ECO NAV | All Rights Reserved
         </div>
-    </section>
-
-    <section id="catalog" class="py-32 bg-white dark:bg-[#081a26]">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
-                <div>
-                    <h2 class="text-4xl font-black text-navy-brand dark:text-white uppercase tracking-tighter" id="cat-header">Mahsulotlar Katalogi</h2>
-                    <div class="h-1 w-20 bg-teal-brand mt-2"></div>
-                </div>
-                <p class="text-slate-400 max-w-sm" id="cat-sub">Expertly calibrated and treated seeds for high-yield harvests.</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-10" id="catalog-grid"></div>
-        </div>
-    </section>
+    </footer>
 
     <div id="seed-modal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-[40px] shadow-2xl overflow-hidden modal-animate relative">
-            <button onclick="closeModal()" class="absolute top-6 right-6 p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:rotate-90 transition-transform duration-300">
-                <i data-lucide="x" class="w-6 h-6 text-navy-brand dark:text-white"></i>
+        <div class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-[40px] shadow-2xl modal-animate relative border dark:border-slate-700">
+            <button onclick="closeModal()" class="absolute top-6 right-6 p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:rotate-90 transition-all z-10">
+                <i data-lucide="x" class="w-6 h-6 dark:text-white"></i>
             </button>
             <div id="modal-content" class="p-8 md:p-12 overflow-y-auto max-h-[85vh]"></div>
         </div>
     </div>
 
-    <section class="py-24 bg-slate-50 dark:bg-slate-900/50">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="bg-white dark:bg-slate-800 p-10 md:p-16 rounded-[50px] shadow-xl border border-slate-100 dark:border-slate-700">
-                <h2 class="text-3xl font-black text-navy-brand dark:text-white mb-4" id="form-title">Bog'lanish</h2>
-                <p class="text-slate-500 dark:text-slate-400 mb-10" id="form-sub">Savollaringiz bormi? Ma'lumotlaringizni qoldiring.</p>
-                <form class="space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <input type="text" id="inp-name" placeholder="Ismingiz" class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition">
-                        <input type="text" id="inp-phone" placeholder="Telefoningiz" class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition">
-                    </div>
-                    <textarea id="inp-msg" rows="4" placeholder="Xabar" class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition"></textarea>
-                    <button type="submit" class="bg-teal-brand text-white px-10 py-4 rounded-2xl font-bold hover:opacity-90 shadow-lg" id="btn-submit">Yuborish</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-24 border-y border-slate-200 dark:border-slate-800">
-        <div class="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 text-center md:text-left">
-            <img src="/assets/sobir_aka.webp" alt="Director" class="w-48 h-48 rounded-full object-cover border-4 border-white dark:border-slate-700 shadow-xl">
-            <div>
-                <h3 class="text-3xl font-black text-navy-brand dark:text-white mb-2">Egamberdiyev Sobir Yo'ldoshevich</h3>
-                <p class="text-teal-brand font-bold text-lg mb-4" id="dir-title">BMB EcoNav Direktori</p>
-                <p class="text-slate-500 dark:text-slate-400 italic leading-relaxed" id="dir-desc">
-                    Қишлоқ хўжалиги бўйича фалсафа фанлари номзоди, кўп йиллик амалий ва илмий тажрибага эга мутахассис.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <footer class="pt-24 pb-12 bg-white dark:bg-[#081a26] px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid md:grid-cols-3 gap-12 mb-20">
-                <div class="md:col-span-1">
-                    <img src="/assets/logo.png" alt="Logo" class="logo-img mb-6">
-                    <p class="text-slate-400 text-sm mb-6" id="footer-bio">BMB EcoNav – BMB Holding’нинг аграр соҳадаги инновацион қадами.</p>
-                    <div class="flex gap-4">
-                        <a href="https://t.me/bmb_holding" target="_blank" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-telegram hover:scale-110 transition group">
-                            <i data-lucide="send" class="w-5 h-5 text-telegram group-hover:text-white transition"></i>
-                        </a>
-                        <a href="https://instagram.com/bmb_holding" target="_blank" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-instagram hover:scale-110 transition group">
-                            <i data-lucide="instagram" class="w-5 h-5 text-instagram group-hover:text-white transition"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="md:col-span-2 grid md:grid-cols-2 gap-8">
-                    <div class="space-y-4">
-                        <h4 class="font-bold text-navy-brand dark:text-teal-brand uppercase text-xs" id="foot-contacts">Aloqa</h4>
-                        <p class="text-sm dark:text-slate-400">Toshkent, Yakkasaroy tumani, Kichik Halqa yo'li, 14-B</p>
-                        <p class="text-sm dark:text-slate-400 font-bold">info@bmb-holding.uz</p>
-                    </div>
-                    <div class="space-y-4">
-                        <h4 class="font-bold text-navy-brand dark:text-teal-brand uppercase text-xs" id="foot-phones">Telefonlar</h4>
-                        <p class="text-lg font-black dark:text-white">+998 77 000 02 33</p>
-                        <p class="text-lg font-black dark:text-white">+998 95 014 44 41</p>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-slate-100 dark:border-slate-800 pt-10 text-center text-[10px] text-slate-300">
-                © 2026 BMB ECO NAV | All Rights Reserved
-            </div>
-        </div>
-    </footer>
-
     <script>
-
-        // Replace with your actual Chat ID found in step 4 above
-const CHAT_ID = "-4966032685"; 
-const TOKEN = "8258481366:AAHwxRFxpl092Wxkus3Ne-QLeg4HxBzmZ1g";
-const URL = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
-
-document.querySelector('form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById('inp-name').value;
-    const phone = document.getElementById('inp-phone').value;
-    const msg = document.getElementById('inp-msg').value;
-
-    // Stylish message format for Telegram
-    const text = `
-🌟 *Yangi xabar (BMB EcoNav)* 🌟
-━━━━━━━━━━━━━━━━━━
-👤 *Ism:* ${name}
-📞 *Tel:* ${phone}
-💬 *Xabar:* ${msg}
-━━━━━━━━━━━━━━━━━━
-📅 Sana: ${new Date().toLocaleString()}
-    `;
-
-    try {
-        const response = await fetch(URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: text,
-                parse_mode: 'Markdown' // Makes the bold text work
-            })
-        });
-
-        if (response.ok) {
-            alert("✅ Xabaringiz yuborildi!");
-            e.target.reset(); // Clear the form
-        } else {
-            alert("❌ Xatolik yuz berdi. Qaytadan urinib ko'ring.");
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert("🌐 Internet aloqasini tekshiring.");
-    }
-});
-
-        const cursor = document.getElementById('seed-cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-            const icon = document.getElementById('theme-icon');
-            icon.setAttribute('data-lucide', document.documentElement.classList.contains('dark') ? 'sun' : 'moon');
-            lucide.createIcons();
-        }
+        let currentLang = 'uz';
+        let currentPage = 'home';
 
         const dict = {
             uz: {
-                navContact: "Bog'lanish", heroTag: "BMB Holding Ekotizimi", heroTitle: "Kelajak – sifatli <span class='text-teal-brand'>urug'dan</span> boshlanadi.",
-                heroDesc: "Sifatli urug' yetishtirish, kalibrlash va dorilash bo'ycha zamonaviy yechimlar markazi.", btnCatalog: "Katalog",
-                videoTitle: "Biz haqimizda video", catHeader: "Mahsulotlar Katalogi", catSub: "Yuqori unuvchan urug'lar.",
-                formTitle: "Bog'lanish", formSub: "Savollaringiz bormi? Ma'lumotlaringizni qoldiring.", inpName: "Ismingiz", inpPhone: "Telefoningiz", inpMsg: "Xabar", btnSubmit: "Yuborish",
-                dirTitle: "BMB EcoNav Direktori", dirDesc: "Qishloq xo'jaligi bo'yicha falsafa fanlari nomzodi.",
-                footerBio: "BMB EcoNav – BMB Holding’ning agrar sohadagi innovatsion qadami.", footContacts: "Aloqa", footPhones: "Telefonlar",
-                recomTitle: "XARIDOR UCHUN TAVSIYALAR", important: "MUHIM OGOHLANTIRISH",
-                steps: ["Qadoqni faqat ekish vaqtida oching.", "Oraliqlarni saqlagan holda eking.", "Namlikni saqlang, tuproq qurimasin.", "Haroratni muntazam tekshiring."],
-                warning: "Barcha intellektual mulk huquqlari himoya qilingan. Mazkur urug'lardan seleksiya yoki tadqiqot maqsadida foydalanish taqiqlanadi.",
-                pumpkin: "Qovoq", cucumber: "Bodring", tomato: "Pomidor", pepper: "Bulg'or qalampiri"
+                navHome: "Bosh sahifa", navAbout: "Kompaniya", navCatalog: "Katalog",
+                heroTitle: "Kelajak – sifatli <span class='text-teal-brand'>urug'dan</span> boshlanadi.",
+                heroDesc: "Сифатли уруғ етиштириш ва дориlash маркази.",
+                aboutTitle: "BMB Holding экотизимида стратегик қадам",
+                about1: "BMB Holding стратегик ўсиш дастури доирасида 2026 йил январь ойида янги корхона – BMB EcoNav’ни ишга туширди.",
+                about2: "Мақсад – маҳаллий тупроқ ва иқлим шароитига мос, юқори унувчан ва барқарор ҳосил берувчи уруғлар билан фермер ва деҳқонларни қўллаб-қувватлаш.",
+                dirTitle: "BMB EcoNav Direktori", dirDesc: "Qishloq xo'jaligi bo'yicha falsafa fanlari nomzodi Эгамбердиев Собир Йўлдошевич.",
+                catHeader: "Mahsulotlar Katalogi",
+                formTitle: "Bog'lanish", formSub: "Savollaringiz bormi? Ma'lumotlaringizni qoldiring.",
+                btnSubmit: "Yuborish", inpName: "Ismingiz", inpPhone: "Telefoningiz", inpMsg: "Xabar",
+                recomTitle: "XARIDOR UCHUN TAVSIYALAR", steps: ["Ekish vaqtida oching.", "Oraliqlarni saqlab eking.", "Namlikni saqlang."],
+                warning: "Barcha huquqlar himoyalangan. Seleksiya uchun foydalanish taqiqlanadi.",
+                pumpkin: "Qovoq", cucumber: "Bodring", tomato: "Pomidor", pepper: "Qalampir"
             },
             ru: {
-                navContact: "Связаться", heroTag: "Экосистема BMB Holding", heroTitle: "Будущее начинается с качественных <span class='text-teal-brand'>семян</span>.",
-                heroDesc: "Центр современных решений по выращиванию и протравливанию семян.", btnCatalog: "Каталог",
-                videoTitle: "Видео о нас", catHeader: "Каталог Продукции", catSub: "Семена с высокой всхожестью.",
-                formTitle: "Контакты", formSub: "Есть вопросы? Оставьте свои данные.", inpName: "Ваше имя", inpPhone: "Ваш телефон", inpMsg: "Сообщение", btnSubmit: "Отправить",
-                dirTitle: "Директор BMB EcoNav", dirDesc: "Кандидат сельскохозяйственных наук.",
-                footerBio: "BMB EcoNav – инновационный шаг BMB Holding в аграрном секторе.", footContacts: "Контакты", footPhones: "Телефоны",
-                recomTitle: "РЕКОМЕНДАЦИИ ПОКУПАТЕЛЮ", important: "ВАЖНОЕ ПРЕДУПРЕЖДЕНИЕ",
-                steps: ["Открывайте упаковку только при посадке.", "Соблюдайте интервалы при посеве.", "Поддерживайте влажность почвы.", "Регулярно проверяйте температуру."],
-                warning: "Все права интеллектуальной собственности защищены. Использование для селекции запрещено.",
-                pumpkin: "Тыква", cucumber: "Огурец", tomato: "Помидор", pepper: "Болгарский перец"
+                navHome: "Главная", navAbout: "О нас", navCatalog: "Каталог",
+                heroTitle: "Будущее начинается с качественных <span class='text-teal-brand'>семян</span>.",
+                heroDesc: "Центр современных решений по выращиванию семян.",
+                aboutTitle: "Стратегический шаг в экосистеме BMB Holding",
+                about1: "В январе 2026 года в рамках программы роста было запущено новое предприятие BMB EcoNav.",
+                about2: "Цель — обеспечение фермеров высокоурожайными семенами, адаптированными к климату.",
+                dirTitle: "Директор BMB EcoNav", dirDesc: "Кандидат сельскохозяйственных наук Эгамбердиев Собир Йулдошевич.",
+                catHeader: "Каталог Продукции",
+                formTitle: "Контакты", formSub: "Есть вопросы? Оставьте свои данные.",
+                btnSubmit: "Отправить", inpName: "Ваше имя", inpPhone: "Телефон", inpMsg: "Сообщение",
+                recomTitle: "РЕКОМЕНДАЦИИ ПОКУПАТЕЛЮ", steps: ["Открыть при посадке.", "Соблюдать интервалы.", "Контроль влажности."],
+                warning: "Все права защищены. Использование для селекции запрещено.",
+                pumpkin: "Тыква", cucumber: "Огурец", tomato: "Помидор", pepper: "Перец"
             },
             en: {
-                navContact: "Contact", heroTag: "BMB Holding Ecosystem", heroTitle: "The Future Begins with Quality <span class='text-teal-brand'>Seeds</span>.",
-                heroDesc: "Center for modern solutions in seed production and treatment.", btnCatalog: "Catalog",
-                videoTitle: "Our Video", catHeader: "Product Catalog", catSub: "High-yield calibrated seeds.",
-                formTitle: "Contact Us", formSub: "Have questions? Leave your details below.", inpName: "Your Name", inpPhone: "Phone Number", inpMsg: "Message", btnSubmit: "Submit",
-                dirTitle: "Director of BMB EcoNav", dirDesc: "PhD in Agricultural Sciences.",
-                footerBio: "BMB EcoNav – BMB Holding's innovative step in agriculture.", footContacts: "Contacts", footPhones: "Phone Numbers",
-                recomTitle: "BUYER RECOMMENDATIONS", important: "IMPORTANT NOTICE",
-                steps: ["Open the package only at planting time.", "Maintain proper spacing during sowing.", "Maintain soil moisture.", "Monitor temperature regularly."],
-                warning: "All intellectual property rights are protected. Usage for breeding or research is prohibited.",
-                pumpkin: "Pumpkin", cucumber: "Cucumber", tomato: "Tomato", pepper: "Bell Pepper"
+                navHome: "Home", navAbout: "About Us", navCatalog: "Catalog",
+                heroTitle: "The Future Begins with Quality <span class='text-teal-brand'>Seeds</span>.",
+                heroDesc: "Modern solutions for seed production and calibration.",
+                aboutTitle: "Strategic step in BMB Holding ecosystem",
+                about1: "BMB Holding launched BMB EcoNav in January 2026 as part of its growth program.",
+                about2: "Goal: support farmers with high-yield seeds adapted to local soil.",
+                dirTitle: "Director of BMB EcoNav", dirDesc: "PhD in Agricultural Sciences, Sabir Yuldashevich Egamberdiev.",
+                catHeader: "Product Catalog",
+                formTitle: "Contact Us", formSub: "Have questions? Leave your details below.",
+                btnSubmit: "Submit", inpName: "Name", inpPhone: "Phone", inpMsg: "Message",
+                recomTitle: "BUYER RECOMMENDATIONS", steps: ["Open at planting time.", "Maintain spacing.", "Monitor moisture."],
+                warning: "All rights reserved. Prohibited for breeding use.",
+                pumpkin: "Pumpkin", cucumber: "Cucumber", tomato: "Tomato", pepper: "Pepper"
             }
         };
 
@@ -331,71 +148,136 @@ document.querySelector('form').addEventListener('submit', async (e) => {
             { id: "pepper", key: "pepper", variety: "YOQUD F1", info: "Batch 6652098 | 50 g", coating: "Fludioxonil | Exp: 02-2028", img: "/assets/pepper.jpg" }
         ];
 
-        function openModal(id) {
-            const p = products.find(x => x.id === id);
-            const lang = document.getElementById('langSwitcher').value;
-            const t = dict[lang];
-            document.getElementById('modal-content').innerHTML = `
-                <div class="grid md:grid-cols-2 gap-8">
-                    <img src="${p.img}" class="rounded-3xl w-full h-64 object-cover shadow-lg">
-                    <div>
-                        <h2 class="text-3xl font-black text-navy-brand dark:text-white uppercase mb-2">${t[p.key]}</h2>
-                        <p class="text-teal-brand font-bold text-xl mb-4">${p.variety}</p>
-                        <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl text-[10px] font-mono text-slate-500 mb-4">${p.info} <br> ${p.coating}</div>
+        function navigateTo(page) {
+            currentPage = page;
+            const container = document.getElementById('page-content');
+            const t = dict[currentLang];
+            
+            // Update Active Nav Link
+            document.querySelectorAll('nav a').forEach(el => el.classList.remove('active-nav'));
+            document.getElementById(`nav-${page}`)?.classList.add('active-nav');
+
+            if (page === 'home') {
+                container.innerHTML = `
+                    <div class="page-fade">
+                        <section class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center py-16">
+                            <div>
+                                <h1 class="text-5xl md:text-7xl font-black dark:text-white leading-tight mb-8">${t.heroTitle}</h1>
+                                <p class="text-xl text-slate-500 mb-10">${t.heroDesc}</p>
+                                <button onclick="navigateTo('catalog')" class="bg-navy-brand text-white px-10 py-5 rounded-2xl font-bold hover:bg-teal-brand transition shadow-xl">Katalogga o'tish</button>
+                            </div>
+                            <img src="/assets/farmmain.jpg" class="rounded-[60px] shadow-3xl h-[500px] w-full object-cover border-[16px] border-white dark:border-slate-800">
+                        </section>
+                        
+                        <section class="py-20 bg-slate-900 text-center"><h2 class="text-white text-3xl mb-10">Biz haqimizda video</h2><div class="max-w-4xl mx-auto aspect-video rounded-3xl overflow-hidden shadow-2xl"><iframe class="w-full h-full" src="https://www.youtube.com/embed/EC17XunxGz0" frameborder="0" allowfullscreen></iframe></div></section>
+                        
+                        <section class="py-24 bg-slate-50 dark:bg-slate-900/30">
+                            <div class="max-w-4xl mx-auto px-6">
+                                <div class="bg-white dark:bg-slate-800 p-10 md:p-16 rounded-[50px] shadow-2xl border dark:border-slate-700">
+                                    <h2 class="text-3xl font-black dark:text-white mb-4">${t.formTitle}</h2>
+                                    <p class="text-slate-500 dark:text-slate-400 mb-10">${t.formSub}</p>
+                                    <form id="tg-form" class="space-y-6">
+                                        <div class="grid md:grid-cols-2 gap-6">
+                                            <input type="text" id="inp-name" required placeholder="${t.inpName}" class="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition">
+                                            <input type="text" id="inp-phone" required placeholder="${t.inpPhone}" class="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition">
+                                        </div>
+                                        <textarea id="inp-msg" rows="4" placeholder="${t.inpMsg}" class="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition"></textarea>
+                                        <button type="submit" class="bg-teal-brand text-white px-10 py-4 rounded-2xl font-bold hover:opacity-90 shadow-lg">${t.btnSubmit}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                </div>
-                <div class="mt-8 border-t border-slate-100 dark:border-slate-800 pt-8">
-                    <h4 class="font-bold text-navy-brand dark:text-teal-brand mb-4">${t.recomTitle}</h4>
-                    <ul class="grid md:grid-cols-2 gap-4 text-sm text-slate-500">${t.steps.map(s => `<li>• ${s}</li>`).join('')}</ul>
-                </div>
-                <div class="mt-8 p-6 bg-red-50 dark:bg-red-900/20 rounded-2xl border-l-4 border-red-500">
-                    <h5 class="text-red-600 font-black text-xs uppercase mb-2">${t.important}</h5>
-                    <p class="text-[11px] text-red-800 dark:text-red-300 leading-relaxed">${t.warning}</p>
-                </div>
-            `;
-            document.getElementById('seed-modal').classList.remove('hidden');
+                `;
+                bindForm();
+            } else if (page === 'about') {
+                container.innerHTML = `
+                    <div class="page-fade px-6 max-w-6xl mx-auto py-16 grid md:grid-cols-2 gap-16 items-center">
+                        <img src="/assets/sobir_aka.webp" class="rounded-[40px] shadow-2xl h-[450px] w-full object-cover border-8 border-white dark:border-slate-800">
+                        <div>
+                            <h2 class="text-4xl font-black mb-6 dark:text-white">${t.aboutTitle}</h2>
+                            <p class="text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">${t.about1}</p>
+                            <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">${t.about2}</p>
+                            <div class="p-8 bg-teal-brand/10 dark:bg-teal-brand/5 rounded-3xl border-l-8 border-teal-brand">
+                                <h4 class="font-bold text-navy-brand dark:text-teal-brand text-xl mb-2">${t.dirTitle}</h4>
+                                <p class="italic text-slate-500 dark:text-slate-400">${t.dirDesc}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (page === 'catalog') {
+                container.innerHTML = `
+                    <div class="page-fade px-6 max-w-7xl mx-auto py-12">
+                        <h2 class="text-4xl font-black mb-12 dark:text-white uppercase">${t.catHeader}</h2>
+                        <div class="grid md:grid-cols-2 gap-10" id="catalog-grid"></div>
+                    </div>
+                `;
+                renderCatalog();
+            }
+            lucide.createIcons();
+            window.scrollTo(0,0);
         }
 
-        function closeModal() { document.getElementById('seed-modal').classList.add('hidden'); }
-
-        function changeLanguage(lang) {
-            const t = dict[lang];
-            document.getElementById('nav-contact').innerText = t.navContact;
-            document.getElementById('hero-tag').innerText = t.heroTag;
-            document.getElementById('hero-title').innerHTML = t.heroTitle;
-            document.getElementById('hero-desc').innerText = t.heroDesc;
-            document.getElementById('btn-catalog').innerText = t.btnCatalog;
-            document.getElementById('video-title').innerText = t.videoTitle;
-            document.getElementById('cat-header').innerText = t.catHeader;
-            document.getElementById('cat-sub').innerText = t.catSub;
-            document.getElementById('form-title').innerText = t.formTitle;
-            document.getElementById('form-sub').innerText = t.formSub;
-            document.getElementById('inp-name').placeholder = t.inpName;
-            document.getElementById('inp-phone').placeholder = t.inpPhone;
-            document.getElementById('inp-msg').placeholder = t.inpMsg;
-            document.getElementById('btn-submit').innerText = t.btnSubmit;
-            document.getElementById('dir-title').innerText = t.dirTitle;
-            document.getElementById('dir-desc').innerText = t.dirDesc;
-            document.getElementById('footer-bio').innerText = t.footerBio;
-            document.getElementById('foot-contacts').innerText = t.footContacts;
-            document.getElementById('foot-phones').innerText = t.footPhones;
-            renderCatalog(lang);
-        }
-
-        function renderCatalog(lang) {
-            const container = document.getElementById('catalog-grid');
-            container.innerHTML = products.map(p => `
-                <div onclick="openModal('${p.id}')" class="catalog-card bg-white dark:bg-slate-800 rounded-[40px] overflow-hidden border border-slate-100 dark:border-slate-700 p-8 shadow-sm">
-                    <h3 class="text-teal-brand font-black text-2xl uppercase">${dict[lang][p.key]}</h3>
-                    <p class="text-navy-brand dark:text-white font-bold text-lg mb-4">${p.variety}</p>
-                    <div class="text-[10px] font-mono text-slate-400 mb-4">${p.info}</div>
-                    <button class="text-teal-brand font-bold text-sm flex items-center gap-2">Batafsil <i data-lucide="chevron-right"></i></button>
+        function renderCatalog() {
+            const grid = document.getElementById('catalog-grid');
+            grid.innerHTML = products.map(p => `
+                <div onclick="openModal('${p.id}')" class="bg-white dark:bg-slate-800 rounded-[40px] overflow-hidden border dark:border-slate-700 shadow-sm hover:shadow-2xl transition duration-500 flex flex-col md:flex-row p-8 cursor-pointer group">
+                    <img src="${p.img}" class="w-full md:w-1/3 h-56 object-cover rounded-3xl group-hover:scale-105 transition duration-700">
+                    <div class="md:pl-8 pt-6 md:pt-0 flex-1">
+                        <h3 class="text-teal-brand font-black text-3xl uppercase mb-2">${dict[currentLang][p.key]}</h3>
+                        <p class="text-navy-brand dark:text-white font-bold text-lg mb-6">${p.variety}</p>
+                        <button class="flex items-center gap-2 text-teal-brand font-bold uppercase tracking-widest text-xs">Ko'rish <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                    </div>
                 </div>
             `).join('');
             lucide.createIcons();
         }
 
-        changeLanguage('uz');
+        function openModal(id) {
+            const p = products.find(x => x.id === id);
+            const t = dict[currentLang];
+            document.getElementById('modal-content').innerHTML = `
+                <div class="grid md:grid-cols-2 gap-10">
+                    <img src="${p.img}" class="rounded-[40px] w-full h-[400px] object-cover shadow-lg">
+                    <div>
+                        <h2 class="text-4xl font-black dark:text-white uppercase mb-4">${t[p.key]}</h2>
+                        <p class="text-teal-brand font-bold text-2xl mb-6">${p.variety}</p>
+                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-3xl text-sm font-mono text-slate-500 dark:text-slate-300 mb-8 border dark:border-slate-700">${p.info} <br> ${p.coating}</div>
+                        <h4 class="font-bold mb-4 dark:text-white uppercase text-sm tracking-wider">${t.recomTitle}</h4>
+                        <ul class="space-y-3 text-slate-600 dark:text-slate-300 mb-10">${t.steps.map(s => `<li>• ${s}</li>`).join('')}</ul>
+                        <div class="p-6 bg-red-50 dark:bg-red-900/20 border-l-8 border-red-500 rounded-2xl"><h5 class="text-red-700 dark:text-red-400 font-bold mb-2 uppercase text-xs">${t.important}</h5><p class="text-xs text-red-800 dark:text-red-200 leading-relaxed">${t.warning}</p></div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('seed-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function bindForm() {
+            const form = document.getElementById('tg-form');
+            if(!form) return;
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const text = `🌟 *Yangi xabar* 🌟\n👤 *Ism:* ${document.getElementById('inp-name').value}\n📞 *Tel:* ${document.getElementById('inp-phone').value}\n💬 *Xabar:* ${document.getElementById('inp-msg').value}`;
+                try {
+                    await fetch(`https://api.telegram.org/bot8258481366:AAHwxRFxpl092Wxkus3Ne-QLeg4HxBzmZ1g/sendMessage`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: "-4966032685", text: text, parse_mode: 'Markdown' })
+                    });
+                    alert("✅ Xabaringiz yuborildi!"); e.target.reset();
+                } catch (err) { alert("❌ Xatolik yuz berdi."); }
+            });
+        }
+
+        function closeModal() { document.getElementById('seed-modal').classList.add('hidden'); }
+        function toggleTheme() { document.documentElement.classList.toggle('dark'); lucide.createIcons(); }
+        function changeLanguage(l) { currentLang = l; navigateTo(currentPage); }
+
+        const cursor = document.getElementById('seed-cursor');
+        document.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+
+        // Load Default Page
+        navigateTo('home');
     </script>
 </body>
 </html>
