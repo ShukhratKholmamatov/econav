@@ -1,283 +1,429 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BMB EcoNav | Innovative Agricultural Solutions</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        :root { --bmb-teal: #26B1B1; --bmb-navy: #0D324D; }
-        .dark { --bg-body: #081a26; --bg-card: #0D324D; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; cursor: none; transition: background-color 0.3s; }
-        #seed-cursor { width: 20px; height: 20px; background: var(--bmb-teal); border-radius: 50% 0 50% 50%; position: fixed; pointer-events: none; z-index: 10000; transform: rotate(-45deg); transition: transform 0.08s; box-shadow: 0 0 15px rgba(38, 177, 177, 0.5); }
-        .bg-teal-brand { background-color: var(--bmb-teal); }
-        .text-teal-brand { color: var(--bmb-teal); }
-        .bg-navy-brand { background-color: var(--bmb-navy); }
-        .dark body { background-color: #081a26; color: #f1f5f9; }
-        .dark nav { background-color: rgba(8, 26, 38, 0.9); border-color: #1e293b; }
-        .dark .bg-white { background-color: #0D324D; }
-        .page-fade { animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .dark select option { background-color: #0D324D; color: white; }
-        .active-nav { color: var(--bmb-teal) !important; border-bottom: 2px solid var(--bmb-teal); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMB EcoNav | Innovative Agricultural Solutions</title>
+
+  <!-- Force Tailwind dark mode to be controlled ONLY by the .dark class -->
+  <script>
+    tailwind = { config: { darkMode: "class" } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    :root { --bmb-teal: #26B1B1; --bmb-navy: #0D324D; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      scroll-behavior: smooth;
+      cursor: none;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #seed-cursor {
+      width: 20px; height: 20px; background: var(--bmb-teal);
+      border-radius: 50% 0 50% 50%;
+      position: fixed; pointer-events: none;
+      z-index: 10000; transform: rotate(-45deg);
+      transition: transform 0.08s;
+      box-shadow: 0 0 15px rgba(38, 177, 177, 0.5);
+    }
+
+    .bg-teal-brand { background-color: var(--bmb-teal); }
+    .text-teal-brand { color: var(--bmb-teal); }
+    .bg-navy-brand { background-color: var(--bmb-navy); }
+    .text-navy-brand { color: var(--bmb-navy); }
+
+    /* ✅ Keep only safe dark overrides */
+    .dark nav { background-color: rgba(8, 26, 38, 0.9); border-color: #1e293b; }
+    .dark .bg-slate-50 { background-color: #0a2333; }
+    .dark select option { background-color: #0D324D; color: white; }
+
+    .page-fade { animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .active-nav { color: var(--bmb-teal) !important; border-bottom: 2px solid var(--bmb-teal); }
+  </style>
 </head>
-<body class="bg-white text-slate-900 overflow-x-hidden">
 
-    <div id="seed-cursor"></div>
+<body class="bg-white text-slate-900 dark:bg-[#081a26] dark:text-slate-100 overflow-x-hidden">
 
-    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-lg border-b border-slate-100 dark:border-slate-800 transition-all">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-            <a href="javascript:void(0)" onclick="navigateTo('home')" class="flex items-center">
-                <img src="/assets/logo.png" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
-            </a>
-            
-            <div class="hidden md:flex items-center gap-8 font-bold text-sm">
-                <a href="javascript:void(0)" onclick="navigateTo('home')" class="hover:text-teal-brand transition dark:text-white" id="nav-home">Bosh sahifa</a>
-                <a href="javascript:void(0)" onclick="navigateTo('about')" class="hover:text-teal-brand transition dark:text-white" id="nav-about">Kompaniya</a>
-                <a href="javascript:void(0)" onclick="navigateTo('catalog')" class="hover:text-teal-brand transition dark:text-white" id="nav-catalog">Katalog</a>
-            </div>
+  <div id="seed-cursor"></div>
 
-            <div class="flex items-center gap-3">
-                <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-                    <i data-lucide="moon" id="theme-icon" class="w-5 h-5 text-teal-brand"></i>
-                </button>
-                <select id="langSwitcher" onchange="changeLanguage(this.value)" class="bg-slate-100 dark:bg-slate-800 font-bold text-[11px] p-2 rounded-lg outline-none uppercase dark:text-white">
-                    <option value="uz">UZ</option><option value="ru">RU</option><option value="en">EN</option>
-                </select>
-                <a href="tel:+998770000233" class="bg-teal-brand text-white px-4 py-2 rounded-full text-xs font-bold hidden sm:block shadow-lg">Bog'lanish</a>
-            </div>
+  <nav class="fixed w-full z-50 bg-white/90 dark:bg-[#081a26]/90 backdrop-blur-lg border-b border-slate-100 dark:border-slate-800 transition-all">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+      <a href="javascript:void(0)" onclick="navigateTo('home')" class="flex items-center">
+        <img src="/assets/logo.png" alt="Logo" class="h-10 md:h-12 w-auto object-contain" />
+      </a>
+
+      <div class="hidden md:flex items-center gap-8 font-bold text-sm">
+        <a href="javascript:void(0)" onclick="navigateTo('home')" class="hover:text-teal-brand transition text-slate-700 dark:text-slate-100" id="nav-home">Bosh sahifa</a>
+        <a href="javascript:void(0)" onclick="navigateTo('about')" class="hover:text-teal-brand transition text-slate-700 dark:text-slate-100" id="nav-about">Kompaniya</a>
+        <a href="javascript:void(0)" onclick="navigateTo('catalog')" class="hover:text-teal-brand transition text-slate-700 dark:text-slate-100" id="nav-catalog">Katalog</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Toggle theme">
+          <i data-lucide="moon" id="theme-icon" class="w-5 h-5 text-teal-brand"></i>
+        </button>
+
+        <select id="langSwitcher" onchange="changeLanguage(this.value)"
+          class="bg-slate-100 dark:bg-slate-800 font-bold text-[11px] p-2 rounded-lg outline-none uppercase dark:text-white border dark:border-slate-700">
+          <option value="uz">UZ</option>
+          <option value="ru">RU</option>
+          <option value="en">EN</option>
+        </select>
+
+        <a href="tel:+998770000233" class="bg-teal-brand text-white px-4 py-2 rounded-full text-xs font-bold hidden sm:block shadow-lg" id="btn-top-contact">
+          Bog'lanish
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="page-content" class="min-h-screen pt-24"></main>
+
+  <footer class="pt-20 pb-10 bg-white dark:bg-[#081a26] px-6 border-t dark:border-slate-800">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+      <div>
+        <img src="/assets/logo.png" class="h-10 mb-6" alt="BMB EcoNav" />
+        <p class="text-xs text-slate-500 dark:text-slate-300 mb-6" id="footer-bio">
+          BMB EcoNav – BMB Holding’ning agrar sohadagi инновацион қадаmi.
+        </p>
+        <div class="flex gap-4">
+          <a href="https://t.me/bmbeconav" class="text-[#0088cc] hover:scale-110 transition"><i data-lucide="send"></i></a>
+          <a href="https://instagram.com/bmbeconav" class="text-[#E4405F] hover:scale-110 transition"><i data-lucide="instagram"></i></a>
         </div>
-    </nav>
+      </div>
 
-    <main id="page-content" class="min-h-screen pt-24"></main>
+      <div class="space-y-4">
+        <h4 class="font-black text-navy-brand dark:text-teal-brand uppercase text-xs" id="footer-contact-title">Aloqa</h4>
+        <p class="text-sm text-slate-600 dark:text-slate-200" id="footer-address">
+          Toshkent, Yakkasaroy tumani, Kichik Halqa yo'li, 14-B
+        </p>
+        <p class="text-sm font-bold text-slate-900 dark:text-white underline">info@bmb-holding.uz</p>
+      </div>
 
-    <footer class="pt-20 pb-10 bg-white dark:bg-[#081a26] px-6 border-t dark:border-slate-800">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
-            <div>
-                <img src="/assets/logo.png" class="h-10 mb-6">
-                <p class="text-xs text-slate-400 dark:text-slate-500 mb-6" id="footer-bio">BMB EcoNav – BMB Holding’ning agrar sohadagi инновацион қадами.</p>
-                <div class="flex gap-4">
-                    <a href="https://t.me/bmbeconav" class="text-[#0088cc] hover:scale-110 transition"><i data-lucide="send"></i></a>
-                    <a href="https://instagram.com/bmbeconav" class="text-[#E4405F] hover:scale-110 transition"><i data-lucide="instagram"></i></a>
-                </div>
-            </div>
-            <div class="space-y-4">
-                <h4 class="font-black text-navy-brand dark:text-teal-brand uppercase text-xs">Aloqa</h4>
-                <p class="text-sm dark:text-slate-400">Toshkent, Yakkasaroy tumani, Kichik Halqa yo'li, 14-B</p>
-                <p class="text-sm font-bold dark:text-white">info@bmb-holding.uz</p>
-            </div>
-            <div class="space-y-4">
-                <h4 class="font-black text-navy-brand dark:text-teal-brand uppercase text-xs">Telefonlar</h4>
-                <p class="text-lg font-black dark:text-white">+998 77 000 02 33</p>
-                <p class="text-lg font-black dark:text-white">+998 95 014 44 41</p>
-            </div>
-        </div>
-        <div class="mt-16 text-center text-[10px] text-slate-400 uppercase tracking-widest border-t pt-8 dark:border-slate-800">
-            © 2026 BMB ECO NAV | All Rights Reserved
-        </div>
-    </footer>
-
-    <div id="seed-modal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-[40px] shadow-2xl modal-animate relative border dark:border-slate-700">
-            <button onclick="closeModal()" class="absolute top-6 right-6 p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:rotate-90 transition-all z-10">
-                <i data-lucide="x" class="w-6 h-6 dark:text-white"></i>
-            </button>
-            <div id="modal-content" class="p-8 md:p-12 overflow-y-auto max-h-[85vh]"></div>
-        </div>
+      <div class="space-y-4">
+        <h4 class="font-black text-navy-brand dark:text-teal-brand uppercase text-xs" id="footer-phones-title">Telefonlar</h4>
+        <p class="text-lg font-black text-slate-900 dark:text-white">+998 77 000 02 33</p>
+        <p class="text-lg font-black text-slate-900 dark:text-white">+998 95 014 44 41</p>
+      </div>
     </div>
 
-    <script>
-        let currentLang = 'uz';
-        let currentPage = 'home';
+    <div class="mt-16 text-center text-[10px] text-slate-400 uppercase tracking-widest border-t pt-8 dark:border-slate-800" id="footer-copy">
+      © 2026 BMB ECO NAV | All Rights Reserved
+    </div>
+  </footer>
 
-        const dict = {
-            uz: {
-                navHome: "Bosh sahifa", navAbout: "Kompaniya", navCatalog: "Katalog",
-                heroTitle: "Kelajak – sifatli <span class='text-teal-brand'>urug'dan</span> boshlanadi.",
-                heroDesc: "Сифатли уруғ етиштириш ва дориlash маркази.",
-                aboutTitle: "BMB Holding экотизимида стратегик қадам",
-                about1: "BMB Holding стратегик ўсиш дастури доирасида 2026 йил январь ойида янги корхона – BMB EcoNav’ни ишга туширди.",
-                about2: "Мақсад – маҳаллий тупроқ ва иқлим шароитига мос, юқори унувчан ва барқарор ҳосил берувчи уруғлар билан фермер ва деҳқонларни қўллаб-қувватлаш.",
-                dirTitle: "BMB EcoNav Direktori", dirDesc: "Qishloq xo'jaligi bo'yicha falsafa fanlari nomzodi Эгамбердиев Собир Йўлдошевич.",
-                catHeader: "Mahsulotlar Katalogi",
-                formTitle: "Bog'lanish", formSub: "Savollaringiz bormi? Ma'lumotlaringizni qoldiring.",
-                btnSubmit: "Yuborish", inpName: "Ismingiz", inpPhone: "Telefoningiz", inpMsg: "Xabar",
-                recomTitle: "XARIDOR UCHUN TAVSIYALAR", steps: ["Ekish vaqtida oching.", "Oraliqlarni saqlab eking.", "Namlikni saqlang."],
-                warning: "Barcha huquqlar himoyalangan. Seleksiya uchun foydalanish taqiqlanadi.",
-                pumpkin: "Qovoq", cucumber: "Bodring", tomato: "Pomidor", pepper: "Qalampir"
-            },
-            ru: {
-                navHome: "Главная", navAbout: "О нас", navCatalog: "Каталог",
-                heroTitle: "Будущее начинается с качественных <span class='text-teal-brand'>семян</span>.",
-                heroDesc: "Центр современных решений по выращиванию семян.",
-                aboutTitle: "Стратегический шаг в экосистеме BMB Holding",
-                about1: "В январе 2026 года в рамках программы роста было запущено новое предприятие BMB EcoNav.",
-                about2: "Цель — обеспечение фермеров высокоурожайными семенами, адаптированными к климату.",
-                dirTitle: "Директор BMB EcoNav", dirDesc: "Кандидат сельскохозяйственных наук Эгамбердиев Собир Йулдошевич.",
-                catHeader: "Каталог Продукции",
-                formTitle: "Контакты", formSub: "Есть вопросы? Оставьте свои данные.",
-                btnSubmit: "Отправить", inpName: "Ваше имя", inpPhone: "Телефон", inpMsg: "Сообщение",
-                recomTitle: "РЕКОМЕНДАЦИИ ПОКУПАТЕЛЮ", steps: ["Открыть при посадке.", "Соблюдать интервалы.", "Контроль влажности."],
-                warning: "Все права защищены. Использование для селекции запрещено.",
-                pumpkin: "Тыква", cucumber: "Огурец", tomato: "Помидор", pepper: "Перец"
-            },
-            en: {
-                navHome: "Home", navAbout: "About Us", navCatalog: "Catalog",
-                heroTitle: "The Future Begins with Quality <span class='text-teal-brand'>Seeds</span>.",
-                heroDesc: "Modern solutions for seed production and calibration.",
-                aboutTitle: "Strategic step in BMB Holding ecosystem",
-                about1: "BMB Holding launched BMB EcoNav in January 2026 as part of its growth program.",
-                about2: "Goal: support farmers with high-yield seeds adapted to local soil.",
-                dirTitle: "Director of BMB EcoNav", dirDesc: "PhD in Agricultural Sciences, Sabir Yuldashevich Egamberdiev.",
-                catHeader: "Product Catalog",
-                formTitle: "Contact Us", formSub: "Have questions? Leave your details below.",
-                btnSubmit: "Submit", inpName: "Name", inpPhone: "Phone", inpMsg: "Message",
-                recomTitle: "BUYER RECOMMENDATIONS", steps: ["Open at planting time.", "Maintain spacing.", "Monitor moisture."],
-                warning: "All rights reserved. Prohibited for breeding use.",
-                pumpkin: "Pumpkin", cucumber: "Cucumber", tomato: "Tomato", pepper: "Pepper"
-            }
-        };
+  <div id="seed-modal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-[40px] shadow-2xl relative border dark:border-slate-700">
+      <button onclick="closeModal()" class="absolute top-6 right-6 p-2 bg-slate-100 dark:bg-slate-800 rounded-full z-10 hover:rotate-90 transition-transform" aria-label="Close modal">
+        <i data-lucide="x" class="w-6 h-6 dark:text-white"></i>
+      </button>
+      <div id="modal-content" class="p-8 md:p-12 overflow-y-auto max-h-[85vh]"></div>
+    </div>
+  </div>
 
-        const products = [
-            { id: "pumpkin", key: "pumpkin", variety: "BOL QOVOG‘I ELITE", info: "Batch 6652098 | 100 g", coating: "Fludioxonil | Exp: 02-2028", img: "/assets/pumpkin.jpg" },
-            { id: "cucumber", key: "cucumber", variety: "ELEGANT F1", info: "Batch 6652098 | 1000 seeds", coating: "Fludioxonil | Exp: 02-2028", img: "/assets/cucumber.jpg" },
-            { id: "tomato", key: "tomato", variety: "7424 ELITE", info: "Batch 6652098 | 1000 seeds", coating: "Fludioxonil | Exp: 02-2028", img: "/assets/tomato.jpg" },
-            { id: "pepper", key: "pepper", variety: "YOQUD F1", info: "Batch 6652098 | 50 g", coating: "Fludioxonil | Exp: 02-2028", img: "/assets/pepper.jpg" }
-        ];
+  <script>
+    let currentLang = 'uz';
+    let currentPage = 'home';
 
-        function navigateTo(page) {
-            currentPage = page;
-            const container = document.getElementById('page-content');
-            const t = dict[currentLang];
-            
-            // Update Active Nav Link
-            document.querySelectorAll('nav a').forEach(el => el.classList.remove('active-nav'));
-            document.getElementById(`nav-${page}`)?.classList.add('active-nav');
+    const dict = {
+      uz: {
+        navHome: "Bosh sahifa", navAbout: "Kompaniya", navCatalog: "Katalog", navContact: "Bog'lanish",
+        heroTitle: "Kelajak – sifatli <span class='text-teal-brand'>urug'dan</span> boshlanadi.",
+        heroDesc: "Сифатли уруғ етиштириш, калибpлаш ва дорилаш бўйича замонавiy ечимlar markazi.",
+        btnHero: "Katalogga o'tish", videoTitle: "Biz haqimizda video",
+        aboutTitle: "BMB Holding экотizimida strategik qadam",
+        about1: "BMB Holding strategik ўсish dasturi doirasida 2026 yil yanvar oyida yangi korxona – BMB EcoNav’ni ishga tushirdi.",
+        about2: "Maqsad – mahalliy tuproq va iqlim sharoitiga mos, yuqori unuvchan va barqaror hosil beruvchi urug'lar bilan ta’minlash.",
+        dirTitle: "BMB EcoNav Direktori", dirDesc: "Qishloq xo'jaligi bo'yicha falsafa fanlari doktori Egamberdiyev Sobir Yo'ldoshevich.",
+        catHeader: "Mahsulotlar Katalogi", btnDetail: "Batafsil",
+        formTitle: "Bog'lanish", formSub: "Savollaringiz bormi? Ma'lumotlaringizni qoldiring.",
+        btnSubmit: "Yuborish", inpName: "Ismingiz", inpPhone: "Telefoningiz", inpMsg: "Xabar",
+        recomTitle: "XARIDOR UCHUN TAVSIYALAR", important: "MUHIM OGOHLANTIRISH",
+        steps: ["Qadoqni faqat ekish vaqtida oching.", "Oraliqlarni saqlab eking.", "Namlikni saqlang."],
+        warning: "Barcha huquqlar himoyalangan. Seleksiya uchun foydalanish taqiqlanadi.",
+        pumpkin: "Qovoq", cucumber: "Bodring", tomato: "Pomidor", pepper: "Qalampir",
 
-            if (page === 'home') {
-                container.innerHTML = `
-                    <div class="page-fade">
-                        <section class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center py-16">
-                            <div>
-                                <h1 class="text-5xl md:text-7xl font-black dark:text-white leading-tight mb-8">${t.heroTitle}</h1>
-                                <p class="text-xl text-slate-500 mb-10">${t.heroDesc}</p>
-                                <button onclick="navigateTo('catalog')" class="bg-navy-brand text-white px-10 py-5 rounded-2xl font-bold hover:bg-teal-brand transition shadow-xl">Katalogga o'tish</button>
-                            </div>
-                            <img src="/assets/farmmain.jpg" class="rounded-[60px] shadow-3xl h-[500px] w-full object-cover border-[16px] border-white dark:border-slate-800">
-                        </section>
-                        
-                        <section class="py-20 bg-slate-900 text-center"><h2 class="text-white text-3xl mb-10">Biz haqimizda video</h2><div class="max-w-4xl mx-auto aspect-video rounded-3xl overflow-hidden shadow-2xl"><iframe class="w-full h-full" src="https://www.youtube.com/embed/EC17XunxGz0" frameborder="0" allowfullscreen></iframe></div></section>
-                        
-                        <section class="py-24 bg-slate-50 dark:bg-slate-900/30">
-                            <div class="max-w-4xl mx-auto px-6">
-                                <div class="bg-white dark:bg-slate-800 p-10 md:p-16 rounded-[50px] shadow-2xl border dark:border-slate-700">
-                                    <h2 class="text-3xl font-black dark:text-white mb-4">${t.formTitle}</h2>
-                                    <p class="text-slate-500 dark:text-slate-400 mb-10">${t.formSub}</p>
-                                    <form id="tg-form" class="space-y-6">
-                                        <div class="grid md:grid-cols-2 gap-6">
-                                            <input type="text" id="inp-name" required placeholder="${t.inpName}" class="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition">
-                                            <input type="text" id="inp-phone" required placeholder="${t.inpPhone}" class="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition">
-                                        </div>
-                                        <textarea id="inp-msg" rows="4" placeholder="${t.inpMsg}" class="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition"></textarea>
-                                        <button type="submit" class="bg-teal-brand text-white px-10 py-4 rounded-2xl font-bold hover:opacity-90 shadow-lg">${t.btnSubmit}</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </section>
+        // ✅ FOOTER
+        footerBio: "BMB EcoNav – BMB Holding’ning agrar sohadagi innovatsion qadami.",
+        footerContactTitle: "Aloqa",
+        footerPhonesTitle: "Telefonlar",
+        footerAddress: "Toshkent, Yakkasaroy tumani, Kichik Halqa yo'li, 14-B",
+        footerCopy: "© 2026 BMB ECO NAV | Barcha huquqlar himoyalangan"
+      },
+
+      ru: {
+        navHome: "Главная", navAbout: "О нас", navCatalog: "Каталог", navContact: "Связь",
+        heroTitle: "Будущее начинается с качественных <span class='text-teal-brand'>семян</span>.",
+        heroDesc: "Центр современных решений по выращиванию, калибровке и протравливанию семян.",
+        btnHero: "Перейти в каталог", videoTitle: "Видео о нас",
+        aboutTitle: "Стратегический шаг в экосистеме BMB Holding",
+        about1: "В январе 2026 года в рамках программы стратегического роста было запущено предприятие BMB EcoNav.",
+        about2: "Цель — обеспечение фермеров высокоурожайными семенами, адаптированными к климату.",
+        dirTitle: "Директор BMB EcoNav", dirDesc: "Доктор сельскохозяйственных наук Эгамбердиев Собир Йулдошевич.",
+        catHeader: "Каталог Продукции", btnDetail: "Подробнее",
+        formTitle: "Контакты", formSub: "Есть вопросы? Оставьте свои данные.",
+        btnSubmit: "Отправить", inpName: "Ваше имя", inpPhone: "Ваш телефон", inpMsg: "Сообщение",
+        recomTitle: "РЕКОМЕНДАЦИИ ПОКУПАТЕЛЮ", important: "ВАЖНОЕ ПРЕДУПРЕЖДЕНИЕ",
+        steps: ["Открывать упаковку только при посадке.", "Соблюдать интервалы при посеве.", "Поддерживать влажность."],
+        warning: "Все права защищены. Использование для селекции запрещено.",
+        pumpkin: "Тыква", cucumber: "Огурец", tomato: "Помидор", pepper: "Перец",
+
+        // ✅ FOOTER
+        footerBio: "BMB EcoNav — инновационный шаг BMB Holding в аграрной сфере.",
+        footerContactTitle: "Контакты",
+        footerPhonesTitle: "Телефоны",
+        footerAddress: "Ташкент, Яккасарайский район, Малая кольцевая дорога, 14-Б",
+        footerCopy: "© 2026 BMB ECO NAV | Все права защищены"
+      },
+
+      en: {
+        navHome: "Home", navAbout: "About", navCatalog: "Catalog", navContact: "Contact",
+        heroTitle: "The Future Begins with Quality <span class='text-teal-brand'>Seeds</span>.",
+        heroDesc: "Center for modern solutions in seed production, calibration, and treatment.",
+        btnHero: "Go to Catalog", videoTitle: "Watch Video",
+        aboutTitle: "Strategic step in BMB Holding ecosystem",
+        about1: "BMB Holding launched BMB EcoNav in January 2026 as part of its strategic growth program.",
+        about2: "Goal: support farmers with high-yield seeds adapted to local soil.",
+        dirTitle: "Director of BMB EcoNav", dirDesc: "PhD in Agricultural Sciences, Sabir Yuldashevich Egamberdiev.",
+        catHeader: "Product Catalog", btnDetail: "Details",
+        formTitle: "Contact Us", formSub: "Have questions? Leave your details below.",
+        btnSubmit: "Submit", inpName: "Name", inpPhone: "Phone", inpMsg: "Message",
+        recomTitle: "BUYER RECOMMENDATIONS", important: "IMPORTANT NOTICE",
+        steps: ["Open the package only at planting time.", "Maintain proper spacing.", "Control soil moisture."],
+        warning: "All intellectual property rights protected. Breeding or research use is prohibited.",
+        pumpkin: "Pumpkin", cucumber: "Cucumber", tomato: "Tomato", pepper: "Bell Pepper",
+
+        // ✅ FOOTER
+        footerBio: "BMB EcoNav — BMB Holding’s innovative step in the agricultural sector.",
+        footerContactTitle: "Contact",
+        footerPhonesTitle: "Phones",
+        footerAddress: "Tashkent, Yakkasaray district, Kichik Halqa road, 14-B",
+        footerCopy: "© 2026 BMB ECO NAV | All Rights Reserved"
+      }
+    };
+
+    const products = [
+      { id: "pumpkin", key: "pumpkin", variety: "BOL QOVOG‘I ELITE", info: "Batch 6652098 | 100 g", coating: "Fludioxonil | Exp: 02-2028", img: "/assets/pumpkin.jpg" },
+      { id: "cucumber", key: "cucumber", variety: "ELEGANT F1", info: "Batch 6652098 | 1000 seeds", coating: "Fludioxonil | Exp: 02-2028", img: "/assets/cucumber.jpg" },
+      { id: "tomato", key: "tomato", variety: "7424 ELITE", info: "Batch 6652098 | 1000 seeds", coating: "Fludioxonil | Exp: 02-2028", img: "/assets/tomato.jpg" },
+      { id: "pepper", key: "pepper", variety: "YOQUD F1", info: "Batch 6652098 | 50 g", coating: "Fludioxonil | Exp: 02-2028", img: "/assets/pepper.jpg" }
+    ];
+
+    function setActiveNav(page) {
+      document.querySelectorAll('nav a').forEach(el => el.classList.remove('active-nav'));
+      document.getElementById(`nav-${page}`)?.classList.add('active-nav');
+    }
+
+    function applyFooterTranslations() {
+      const t = dict[currentLang];
+      const bio = document.getElementById('footer-bio');
+      const contactTitle = document.getElementById('footer-contact-title');
+      const phonesTitle = document.getElementById('footer-phones-title');
+      const address = document.getElementById('footer-address');
+      const copy = document.getElementById('footer-copy');
+
+      if (bio) bio.innerText = t.footerBio;
+      if (contactTitle) contactTitle.innerText = t.footerContactTitle;
+      if (phonesTitle) phonesTitle.innerText = t.footerPhonesTitle;
+      if (address) address.innerText = t.footerAddress;
+      if (copy) copy.innerText = t.footerCopy;
+    }
+
+    function navigateTo(page) {
+      currentPage = page;
+      const container = document.getElementById('page-content');
+      const t = dict[currentLang];
+
+      setActiveNav(page);
+
+      document.getElementById('nav-home').innerText = t.navHome;
+      document.getElementById('nav-about').innerText = t.navAbout;
+      document.getElementById('nav-catalog').innerText = t.navCatalog;
+      document.getElementById('btn-top-contact').innerText = t.navContact;
+
+      // ✅ apply footer translations whenever page or language changes
+      applyFooterTranslations();
+
+      if (page === 'home') {
+        container.innerHTML = `
+          <div class="page-fade">
+            <section class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center py-16">
+              <div>
+                <h1 class="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-tight mb-8">${t.heroTitle}</h1>
+                <p class="text-xl text-slate-500 dark:text-slate-300 mb-10">${t.heroDesc}</p>
+                <button onclick="navigateTo('catalog')" class="bg-navy-brand text-white px-10 py-5 rounded-2xl font-bold hover:bg-teal-brand transition shadow-xl">${t.btnHero}</button>
+              </div>
+              <img src="/assets/farmmain.jpg" class="rounded-[60px] shadow-3xl h-[500px] w-full object-cover border-[16px] border-white dark:border-slate-800" />
+            </section>
+
+            <section class="py-20 bg-slate-900 text-center">
+              <h2 class="text-white text-3xl mb-10">${t.videoTitle}</h2>
+              <div class="max-w-4xl mx-auto aspect-video rounded-3xl overflow-hidden shadow-2xl">
+                <iframe class="w-full h-full" src="https://www.youtube.com/embed/EC17XunxGz0" frameborder="0" allowfullscreen></iframe>
+              </div>
+            </section>
+
+            <section class="py-24 bg-slate-50 dark:bg-slate-900/30">
+              <div class="max-w-4xl mx-auto px-6">
+                <div class="bg-white dark:bg-slate-800 p-10 md:p-16 rounded-[50px] shadow-2xl border dark:border-slate-700">
+                  <h2 class="text-3xl font-black text-navy-brand dark:text-white mb-4">${t.formTitle}</h2>
+                  <p class="text-slate-500 dark:text-slate-400 mb-10">${t.formSub}</p>
+                  <form id="tg-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                      <input type="text" id="inp-name" required placeholder="${t.inpName}"
+                        class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition" />
+                      <input type="text" id="inp-phone" required placeholder="${t.inpPhone}"
+                        class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition" />
                     </div>
-                `;
-                bindForm();
-            } else if (page === 'about') {
-                container.innerHTML = `
-                    <div class="page-fade px-6 max-w-6xl mx-auto py-16 grid md:grid-cols-2 gap-16 items-center">
-                        <img src="/assets/sobir_aka.webp" class="rounded-[40px] shadow-2xl h-[450px] w-full object-cover border-8 border-white dark:border-slate-800">
-                        <div>
-                            <h2 class="text-4xl font-black mb-6 dark:text-white">${t.aboutTitle}</h2>
-                            <p class="text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">${t.about1}</p>
-                            <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">${t.about2}</p>
-                            <div class="p-8 bg-teal-brand/10 dark:bg-teal-brand/5 rounded-3xl border-l-8 border-teal-brand">
-                                <h4 class="font-bold text-navy-brand dark:text-teal-brand text-xl mb-2">${t.dirTitle}</h4>
-                                <p class="italic text-slate-500 dark:text-slate-400">${t.dirDesc}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (page === 'catalog') {
-                container.innerHTML = `
-                    <div class="page-fade px-6 max-w-7xl mx-auto py-12">
-                        <h2 class="text-4xl font-black mb-12 dark:text-white uppercase">${t.catHeader}</h2>
-                        <div class="grid md:grid-cols-2 gap-10" id="catalog-grid"></div>
-                    </div>
-                `;
-                renderCatalog();
-            }
-            lucide.createIcons();
-            window.scrollTo(0,0);
-        }
-
-        function renderCatalog() {
-            const grid = document.getElementById('catalog-grid');
-            grid.innerHTML = products.map(p => `
-                <div onclick="openModal('${p.id}')" class="bg-white dark:bg-slate-800 rounded-[40px] overflow-hidden border dark:border-slate-700 shadow-sm hover:shadow-2xl transition duration-500 flex flex-col md:flex-row p-8 cursor-pointer group">
-                    <img src="${p.img}" class="w-full md:w-1/3 h-56 object-cover rounded-3xl group-hover:scale-105 transition duration-700">
-                    <div class="md:pl-8 pt-6 md:pt-0 flex-1">
-                        <h3 class="text-teal-brand font-black text-3xl uppercase mb-2">${dict[currentLang][p.key]}</h3>
-                        <p class="text-navy-brand dark:text-white font-bold text-lg mb-6">${p.variety}</p>
-                        <button class="flex items-center gap-2 text-teal-brand font-bold uppercase tracking-widest text-xs">Ko'rish <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-                    </div>
+                    <textarea id="inp-msg" rows="4" placeholder="${t.inpMsg}"
+                      class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition"></textarea>
+                    <button type="submit" class="bg-teal-brand text-white px-10 py-4 rounded-2xl font-bold hover:opacity-90 shadow-lg">${t.btnSubmit}</button>
+                  </form>
                 </div>
-            `).join('');
-            lucide.createIcons();
+              </div>
+            </section>
+          </div>
+        `;
+        bindForm();
+      }
+
+      else if (page === 'about') {
+        container.innerHTML = `
+          <div class="page-fade px-6 max-w-6xl mx-auto py-16 grid md:grid-cols-2 gap-16 items-center">
+            <img src="/assets/sobir_aka.webp" class="rounded-[40px] shadow-2xl h-[450px] w-full object-cover border-8 border-white dark:border-slate-800" />
+            <div>
+              <h2 class="text-4xl font-black mb-6 text-slate-900 dark:text-white">${t.aboutTitle}</h2>
+              <p class="text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">${t.about1}</p>
+              <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">${t.about2}</p>
+              <div class="p-8 bg-teal-brand/10 dark:bg-teal-brand/5 rounded-3xl border-l-8 border-teal-brand">
+                <h4 class="font-bold text-navy-brand dark:text-teal-brand text-xl mb-2">${t.dirTitle}</h4>
+                <p class="italic text-slate-500 dark:text-slate-400">${t.dirDesc}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      else if (page === 'catalog') {
+        container.innerHTML = `
+          <div class="page-fade px-6 max-w-7xl mx-auto py-12">
+            <h2 class="text-4xl font-black text-slate-900 dark:text-white uppercase mb-12">${t.catHeader}</h2>
+            <div class="grid md:grid-cols-2 gap-10" id="catalog-grid"></div>
+          </div>
+        `;
+        renderCatalog();
+      }
+
+      lucide.createIcons();
+      window.scrollTo(0, 0);
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-grid');
+      grid.innerHTML = products.map(p => `
+        <div onclick="openModal('${p.id}')"
+          class="bg-white dark:bg-slate-800 rounded-[40px] overflow-hidden border dark:border-slate-700 shadow-sm hover:shadow-2xl transition duration-500 flex flex-col md:flex-row p-8 cursor-pointer group">
+          <img src="${p.img}" class="w-full md:w-1/3 h-56 object-cover rounded-3xl group-hover:scale-105 transition duration-700" />
+          <div class="md:pl-8 pt-6 md:pt-0 flex-1">
+            <h3 class="text-teal-brand font-black text-3xl uppercase mb-2 text-left">${dict[currentLang][p.key]}</h3>
+            <p class="text-navy-brand dark:text-white font-bold text-lg mb-6 text-left">${p.variety}</p>
+            <button class="flex items-center gap-2 text-teal-brand font-bold uppercase tracking-widest text-xs">
+              ${dict[currentLang].btnDetail} <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function openModal(id) {
+      const p = products.find(x => x.id === id);
+      const t = dict[currentLang];
+
+      document.getElementById('modal-content').innerHTML = `
+        <div class="grid md:grid-cols-2 gap-10">
+          <img src="${p.img}" class="rounded-[40px] w-full h-[400px] object-cover shadow-lg" />
+          <div>
+            <h2 class="text-4xl font-black text-slate-900 dark:text-white uppercase mb-4">${t[p.key]}</h2>
+            <p class="text-teal-brand font-bold text-2xl mb-6">${p.variety}</p>
+            <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-3xl text-sm font-mono text-slate-500 dark:text-slate-300 mb-8 border dark:border-slate-700">
+              ${p.info} <br /> ${p.coating}
+            </div>
+            <h4 class="font-bold mb-4 text-slate-900 dark:text-white uppercase text-sm">${t.recomTitle}</h4>
+            <ul class="space-y-3 text-slate-600 dark:text-slate-300 mb-10">
+              ${t.steps.map(s => `<li>• ${s}</li>`).join('')}
+            </ul>
+            <div class="p-6 bg-red-50 dark:bg-red-900/20 border-l-8 border-red-500 rounded-2xl">
+              <h5 class="text-red-700 dark:text-red-400 font-bold mb-2 uppercase text-xs">${t.important}</h5>
+              <p class="text-xs text-red-800 dark:text-red-200 leading-relaxed">${t.warning}</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('seed-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function bindForm() {
+      const form = document.getElementById('tg-form');
+      if (!form) return;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const text =
+          `🌟 *Yangi xabar* 🌟\n` +
+          `👤 *Ism:* ${document.getElementById('inp-name').value}\n` +
+          `📞 *Tel:* ${document.getElementById('inp-phone').value}\n` +
+          `💬 *Xabar:* ${document.getElementById('inp-msg').value}`;
+
+        try {
+          await fetch(`https://api.telegram.org/bot8258481366:AAHwxRFxpl092Wxkus3Ne-QLeg4HxBzmZ1g/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: "-4966032685", text: text, parse_mode: 'Markdown' })
+          });
+          alert("✅ Xabaringiz yuborildi!");
+          e.target.reset();
+        } catch (err) {
+          alert("❌ Xatolik yuz berdi.");
         }
+      });
+    }
 
-        function openModal(id) {
-            const p = products.find(x => x.id === id);
-            const t = dict[currentLang];
-            document.getElementById('modal-content').innerHTML = `
-                <div class="grid md:grid-cols-2 gap-10">
-                    <img src="${p.img}" class="rounded-[40px] w-full h-[400px] object-cover shadow-lg">
-                    <div>
-                        <h2 class="text-4xl font-black dark:text-white uppercase mb-4">${t[p.key]}</h2>
-                        <p class="text-teal-brand font-bold text-2xl mb-6">${p.variety}</p>
-                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-3xl text-sm font-mono text-slate-500 dark:text-slate-300 mb-8 border dark:border-slate-700">${p.info} <br> ${p.coating}</div>
-                        <h4 class="font-bold mb-4 dark:text-white uppercase text-sm tracking-wider">${t.recomTitle}</h4>
-                        <ul class="space-y-3 text-slate-600 dark:text-slate-300 mb-10">${t.steps.map(s => `<li>• ${s}</li>`).join('')}</ul>
-                        <div class="p-6 bg-red-50 dark:bg-red-900/20 border-l-8 border-red-500 rounded-2xl"><h5 class="text-red-700 dark:text-red-400 font-bold mb-2 uppercase text-xs">${t.important}</h5><p class="text-xs text-red-800 dark:text-red-200 leading-relaxed">${t.warning}</p></div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('seed-modal').classList.remove('hidden');
-            lucide.createIcons();
-        }
+    function closeModal() {
+      document.getElementById('seed-modal').classList.add('hidden');
+    }
 
-        function bindForm() {
-            const form = document.getElementById('tg-form');
-            if(!form) return;
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const text = `🌟 *Yangi xabar* 🌟\n👤 *Ism:* ${document.getElementById('inp-name').value}\n📞 *Tel:* ${document.getElementById('inp-phone').value}\n💬 *Xabar:* ${document.getElementById('inp-msg').value}`;
-                try {
-                    await fetch(`https://api.telegram.org/bot8258481366:AAHwxRFxpl092Wxkus3Ne-QLeg4HxBzmZ1g/sendMessage`, {
-                        method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chat_id: "-4966032685", text: text, parse_mode: 'Markdown' })
-                    });
-                    alert("✅ Xabaringiz yuborildi!"); e.target.reset();
-                } catch (err) { alert("❌ Xatolik yuz berdi."); }
-            });
-        }
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      lucide.createIcons();
+    }
 
-        function closeModal() { document.getElementById('seed-modal').classList.add('hidden'); }
-        function toggleTheme() { document.documentElement.classList.toggle('dark'); lucide.createIcons(); }
-        function changeLanguage(l) { currentLang = l; navigateTo(currentPage); }
+    function changeLanguage(l) {
+      currentLang = l;
+      navigateTo(currentPage);
+    }
 
-        const cursor = document.getElementById('seed-cursor');
-        document.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+    const cursor = document.getElementById('seed-cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
 
-        // Load Default Page
-        navigateTo('home');
-    </script>
+    // initial render
+    navigateTo('home');
+  </script>
 </body>
 </html>
