@@ -5,19 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BMB EcoNav | Innovative Agricultural Solutions</title>
 
-  <!-- Tailwind CDN config MUST be defined before loading Tailwind -->
+  <!-- ✅ ONE meta only -->
+  <meta name="color-scheme" content="light dark" />
+
+  <!-- ✅ THEME MUST RUN BEFORE TAILWIND LOADS (NO FLASH + CONSISTENT) -->
+  <script>
+    (function () {
+      const THEME_KEY = "bmb_theme"; // ✅ single key everywhere
+      const saved = localStorage.getItem(THEME_KEY); // "light" | "dark" | null
+      const theme = saved === "dark" ? "dark" : "light"; // ✅ default always light
+
+      const root = document.documentElement;
+      if (theme === "dark") root.classList.add("dark");
+      else root.classList.remove("dark");
+
+      // Helps browser form controls & built-in UI match your theme
+      root.style.colorScheme = theme;
+    })();
+  </script>
+
+  <!-- ✅ Tailwind config BEFORE tailwind CDN -->
   <script>
     tailwind = { config: { darkMode: "class" } };
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Prevent OS / browser auto-darkening and keep consistent theme -->
-  <meta name="color-scheme" content="light">
-  <style>
-    /* Some browsers/extensions auto-apply "dark mode" styles. This helps avoid it. */
-    html { color-scheme: light; }
-    html.dark { color-scheme: dark; }
-  </style>
 
   <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -141,57 +152,36 @@
 
   <script>
     /***********************
-     * THEME (FIXED)
-     * - Default is ALWAYS LIGHT on first visit
-     * - User choice is saved in localStorage
-     * - No OS auto-dark forcing
+     * THEME (CLEAN + CONSISTENT)
      ***********************/
     const THEME_KEY = "bmb_theme";
 
-    function applyTheme(theme) {
+    function setTheme(theme) {
       const root = document.documentElement;
-      if (theme === "dark") root.classList.add("dark");
-      else root.classList.remove("dark");
+      const isDark = theme === "dark";
 
-      // helps browsers respect our chosen scheme
-      root.style.colorScheme = theme === "dark" ? "dark" : "light";
-      const meta = document.querySelector('meta[name="color-scheme"]');
-      if (meta) meta.setAttribute("content", theme === "dark" ? "dark" : "light");
+      root.classList.toggle("dark", isDark);
+      root.style.colorScheme = isDark ? "dark" : "light";
+      localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
 
       updateThemeIcon();
-    }
-
-    function getSavedTheme() {
-      return localStorage.getItem(THEME_KEY); // "dark" | "light" | null
-    }
-
-    function saveTheme(theme) {
-      localStorage.setItem(THEME_KEY, theme);
+      lucide.createIcons();
     }
 
     function toggleTheme() {
       const isDark = document.documentElement.classList.contains("dark");
-      const next = isDark ? "light" : "dark";
-      saveTheme(next);
-      applyTheme(next);
-      lucide.createIcons();
+      setTheme(isDark ? "light" : "dark");
     }
 
     function updateThemeIcon() {
-      // optional: swap icon, not required
       const icon = document.getElementById("theme-icon");
       if (!icon) return;
-
       const isDark = document.documentElement.classList.contains("dark");
       icon.setAttribute("data-lucide", isDark ? "sun" : "moon");
     }
 
-    // ✅ IMPORTANT: force initial theme before anything renders
-    (function initTheme() {
-      const saved = getSavedTheme();
-      // default: LIGHT (not based on OS)
-      applyTheme(saved || "light");
-    })();
+    // ensure icon matches initial theme (class already set in <head>)
+    updateThemeIcon();
 
     /***********************
      * APP
@@ -216,14 +206,12 @@
         steps: ["Qadoqni faqat ekish vaqtida oching.", "Oraliqlarni saqlab eking.", "Namlikni saqlang."],
         warning: "Barcha huquqlar himoyalangan. Seleksiya uchun foydalanish taqiqlanadi.",
         pumpkin: "Qovoq", cucumber: "Bodring", tomato: "Pomidor", pepper: "Qalampir",
-
         footerBio: "BMB EcoNav – BMB Holding’ning agrar sohadagi innovatsion qadami.",
         footerContactTitle: "Aloqa",
         footerPhonesTitle: "Telefonlar",
         footerAddress: "Toshkent, Yakkasaroy tumani, Kichik Halqa yo'li, 14-B",
         footerCopy: "© 2026 BMB ECO NAV | Barcha huquqlar himoyalangan"
       },
-
       ru: {
         navHome: "Главная", navAbout: "О нас", navCatalog: "Каталог", navContact: "Связь",
         heroTitle: "Будущее начинается с качественных <span class='text-teal-brand'>семян</span>.",
@@ -240,14 +228,12 @@
         steps: ["Открывать упаковку только при посадке.", "Соблюдать интервалы при посеве.", "Поддерживать влажность."],
         warning: "Все права защищены. Использование для селекции запрещено.",
         pumpkin: "Тыква", cucumber: "Огурец", tomato: "Помидор", pepper: "Перец",
-
         footerBio: "BMB EcoNav — инновационный шаг BMB Holding в аграрной сфере.",
         footerContactTitle: "Контакты",
         footerPhonesTitle: "Телефоны",
         footerAddress: "Ташкент, Яккасарайский район, Малая кольцевая дорога, 14-Б",
         footerCopy: "© 2026 BMB ECO NAV | Все права защищены"
       },
-
       en: {
         navHome: "Home", navAbout: "About", navCatalog: "Catalog", navContact: "Contact",
         heroTitle: "The Future Begins with Quality <span class='text-teal-brand'>Seeds</span>.",
@@ -264,7 +250,6 @@
         steps: ["Open the package only at planting time.", "Maintain proper spacing.", "Control soil moisture."],
         warning: "All intellectual property rights protected. Breeding or research use is prohibited.",
         pumpkin: "Pumpkin", cucumber: "Cucumber", tomato: "Tomato", pepper: "Bell Pepper",
-
         footerBio: "BMB EcoNav — BMB Holding’s innovative step in the agricultural sector.",
         footerContactTitle: "Contact",
         footerPhonesTitle: "Phones",
@@ -287,17 +272,11 @@
 
     function applyFooterTranslations() {
       const t = dict[currentLang];
-      const bio = document.getElementById('footer-bio');
-      const contactTitle = document.getElementById('footer-contact-title');
-      const phonesTitle = document.getElementById('footer-phones-title');
-      const address = document.getElementById('footer-address');
-      const copy = document.getElementById('footer-copy');
-
-      if (bio) bio.innerText = t.footerBio;
-      if (contactTitle) contactTitle.innerText = t.footerContactTitle;
-      if (phonesTitle) phonesTitle.innerText = t.footerPhonesTitle;
-      if (address) address.innerText = t.footerAddress;
-      if (copy) copy.innerText = t.footerCopy;
+      document.getElementById('footer-bio').innerText = t.footerBio;
+      document.getElementById('footer-contact-title').innerText = t.footerContactTitle;
+      document.getElementById('footer-phones-title').innerText = t.footerPhonesTitle;
+      document.getElementById('footer-address').innerText = t.footerAddress;
+      document.getElementById('footer-copy').innerText = t.footerCopy;
     }
 
     function navigateTo(page) {
@@ -341,12 +320,12 @@
                   <form id="tg-form" class="space-y-6">
                     <div class="grid md:grid-cols-2 gap-6">
                       <input type="text" id="inp-name" required placeholder="${t.inpName}"
-                        class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition" />
+                        class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-brand transition" />
                       <input type="text" id="inp-phone" required placeholder="${t.inpPhone}"
-                        class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition" />
+                        class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-brand transition" />
                     </div>
                     <textarea id="inp-msg" rows="4" placeholder="${t.inpMsg}"
-                      class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none dark:text-white focus:ring-2 focus:ring-teal-brand transition"></textarea>
+                      class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-brand transition"></textarea>
                     <button type="submit" class="bg-teal-brand text-white px-10 py-4 rounded-2xl font-bold hover:opacity-90 shadow-lg">${t.btnSubmit}</button>
                   </form>
                 </div>
@@ -355,9 +334,7 @@
           </div>
         `;
         bindForm();
-      }
-
-      else if (page === 'about') {
+      } else if (page === 'about') {
         container.innerHTML = `
           <div class="page-fade px-6 max-w-6xl mx-auto py-16 grid md:grid-cols-2 gap-16 items-center">
             <img src="/assets/sobir_aka.webp"
@@ -373,9 +350,7 @@
             </div>
           </div>
         `;
-      }
-
-      else if (page === 'catalog') {
+      } else if (page === 'catalog') {
         container.innerHTML = `
           <div class="page-fade px-6 max-w-7xl mx-auto py-12">
             <h2 class="text-4xl font-black text-slate-900 dark:text-white uppercase mb-12">${t.catHeader}</h2>
@@ -477,7 +452,6 @@
       cursor.style.top = e.clientY + 'px';
     });
 
-    // first render icons + page after theme init
     lucide.createIcons();
     navigateTo('home');
   </script>
