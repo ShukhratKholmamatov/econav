@@ -5,11 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BMB EcoNav | Innovative Agricultural Solutions</title>
 
-  <!-- Force Tailwind dark mode to be controlled ONLY by the .dark class -->
+  <!-- Tailwind CDN config MUST be defined before loading Tailwind -->
   <script>
     tailwind = { config: { darkMode: "class" } };
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Prevent OS / browser auto-darkening and keep consistent theme -->
+  <meta name="color-scheme" content="light">
+  <style>
+    /* Some browsers/extensions auto-apply "dark mode" styles. This helps avoid it. */
+    html { color-scheme: light; }
+    html.dark { color-scheme: dark; }
+  </style>
 
   <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -38,7 +46,7 @@
     .bg-navy-brand { background-color: var(--bmb-navy); }
     .text-navy-brand { color: var(--bmb-navy); }
 
-    /* ✅ Keep only safe dark overrides */
+    /* Keep only safe dark overrides */
     .dark nav { background-color: rgba(8, 26, 38, 0.9); border-color: #1e293b; }
     .dark .bg-slate-50 { background-color: #0a2333; }
     .dark select option { background-color: #0D324D; color: white; }
@@ -54,7 +62,6 @@
 </head>
 
 <body class="bg-white text-slate-900 dark:bg-[#081a26] dark:text-slate-100 overflow-x-hidden">
-
   <div id="seed-cursor"></div>
 
   <nav class="fixed w-full z-50 bg-white/90 dark:bg-[#081a26]/90 backdrop-blur-lg border-b border-slate-100 dark:border-slate-800 transition-all">
@@ -95,7 +102,7 @@
       <div>
         <img src="/assets/logo.png" class="h-10 mb-6" alt="BMB EcoNav" />
         <p class="text-xs text-slate-500 dark:text-slate-300 mb-6" id="footer-bio">
-          BMB EcoNav – BMB Holding’ning agrar sohadagi инновацион қадаmi.
+          BMB EcoNav – BMB Holding’ning agrar sohadagi innovatsion qadami.
         </p>
         <div class="flex gap-4">
           <a href="https://t.me/bmbeconav" class="text-[#0088cc] hover:scale-110 transition"><i data-lucide="send"></i></a>
@@ -133,6 +140,62 @@
   </div>
 
   <script>
+    /***********************
+     * THEME (FIXED)
+     * - Default is ALWAYS LIGHT on first visit
+     * - User choice is saved in localStorage
+     * - No OS auto-dark forcing
+     ***********************/
+    const THEME_KEY = "bmb_theme";
+
+    function applyTheme(theme) {
+      const root = document.documentElement;
+      if (theme === "dark") root.classList.add("dark");
+      else root.classList.remove("dark");
+
+      // helps browsers respect our chosen scheme
+      root.style.colorScheme = theme === "dark" ? "dark" : "light";
+      const meta = document.querySelector('meta[name="color-scheme"]');
+      if (meta) meta.setAttribute("content", theme === "dark" ? "dark" : "light");
+
+      updateThemeIcon();
+    }
+
+    function getSavedTheme() {
+      return localStorage.getItem(THEME_KEY); // "dark" | "light" | null
+    }
+
+    function saveTheme(theme) {
+      localStorage.setItem(THEME_KEY, theme);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const next = isDark ? "light" : "dark";
+      saveTheme(next);
+      applyTheme(next);
+      lucide.createIcons();
+    }
+
+    function updateThemeIcon() {
+      // optional: swap icon, not required
+      const icon = document.getElementById("theme-icon");
+      if (!icon) return;
+
+      const isDark = document.documentElement.classList.contains("dark");
+      icon.setAttribute("data-lucide", isDark ? "sun" : "moon");
+    }
+
+    // ✅ IMPORTANT: force initial theme before anything renders
+    (function initTheme() {
+      const saved = getSavedTheme();
+      // default: LIGHT (not based on OS)
+      applyTheme(saved || "light");
+    })();
+
+    /***********************
+     * APP
+     ***********************/
     let currentLang = 'uz';
     let currentPage = 'home';
 
@@ -142,8 +205,8 @@
         heroTitle: "Kelajak – sifatli <span class='text-teal-brand'>urug'dan</span> boshlanadi.",
         heroDesc: "Sifatli urug' yetishtirish, kalibrlash va dorilash bo'yicha zamonaviy yechimlar markazi.",
         btnHero: "Katalogga o'tish", videoTitle: "Biz haqimizda video",
-        aboutTitle: "BMB Holding экотizimida strategik qadam",
-        about1: "BMB Holding strategik ўсish dasturi doirasida 2026 yil yanvar oyida yangi korxona – BMB EcoNav’ni ishga tushirdi.",
+        aboutTitle: "BMB Holding ekotizimida strategik qadam",
+        about1: "BMB Holding strategik o‘sish dasturi doirasida 2026 yil yanvar oyida yangi korxona – BMB EcoNav’ni ishga tushirdi.",
         about2: "Maqsad – mahalliy tuproq va iqlim sharoitiga mos, yuqori unuvchan va barqaror hosil beruvchi urug'lar bilan ta’minlash.",
         dirTitle: "BMB EcoNav Direktori", dirDesc: "Qishloq xo'jaligi bo'yicha falsafa fanlari doktori Egamberdiyev Sobir Yo'ldoshevich.",
         catHeader: "Mahsulotlar Katalogi", btnDetail: "Batafsil",
@@ -154,7 +217,6 @@
         warning: "Barcha huquqlar himoyalangan. Seleksiya uchun foydalanish taqiqlanadi.",
         pumpkin: "Qovoq", cucumber: "Bodring", tomato: "Pomidor", pepper: "Qalampir",
 
-        // ✅ FOOTER
         footerBio: "BMB EcoNav – BMB Holding’ning agrar sohadagi innovatsion qadami.",
         footerContactTitle: "Aloqa",
         footerPhonesTitle: "Telefonlar",
@@ -179,7 +241,6 @@
         warning: "Все права защищены. Использование для селекции запрещено.",
         pumpkin: "Тыква", cucumber: "Огурец", tomato: "Помидор", pepper: "Перец",
 
-        // ✅ FOOTER
         footerBio: "BMB EcoNav — инновационный шаг BMB Holding в аграрной сфере.",
         footerContactTitle: "Контакты",
         footerPhonesTitle: "Телефоны",
@@ -204,7 +265,6 @@
         warning: "All intellectual property rights protected. Breeding or research use is prohibited.",
         pumpkin: "Pumpkin", cucumber: "Cucumber", tomato: "Tomato", pepper: "Bell Pepper",
 
-        // ✅ FOOTER
         footerBio: "BMB EcoNav — BMB Holding’s innovative step in the agricultural sector.",
         footerContactTitle: "Contact",
         footerPhonesTitle: "Phones",
@@ -252,7 +312,6 @@
       document.getElementById('nav-catalog').innerText = t.navCatalog;
       document.getElementById('btn-top-contact').innerText = t.navContact;
 
-      // ✅ apply footer translations whenever page or language changes
       applyFooterTranslations();
 
       if (page === 'home') {
@@ -264,7 +323,7 @@
                 <p class="text-xl text-slate-500 dark:text-slate-300 mb-10">${t.heroDesc}</p>
                 <button onclick="navigateTo('catalog')" class="bg-navy-brand text-white px-10 py-5 rounded-2xl font-bold hover:bg-teal-brand transition shadow-xl">${t.btnHero}</button>
               </div>
-              <img src="/assets/farmmain.jpg" class="rounded-[60px] shadow-3xl h-[500px] w-full object-cover border-[16px] border-white dark:border-slate-800" />
+              <img src="/assets/farmmain.jpg" class="rounded-[60px] shadow-3xl h-[520px] w-full object-cover object-center border-[16px] border-white dark:border-slate-800" />
             </section>
 
             <section class="py-20 bg-slate-900 text-center">
@@ -302,7 +361,7 @@
         container.innerHTML = `
           <div class="page-fade px-6 max-w-6xl mx-auto py-16 grid md:grid-cols-2 gap-16 items-center">
             <img src="/assets/sobir_aka.webp"
-  class="rounded-[40px] shadow-2xl h-[700px] w-full object-cover object-top border-8 border-white dark:border-slate-800" />
+              class="rounded-[40px] shadow-2xl h-[700px] w-full object-cover object-top border-8 border-white dark:border-slate-800" />
             <div>
               <h2 class="text-4xl font-black mb-6 text-slate-900 dark:text-white">${t.aboutTitle}</h2>
               <p class="text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">${t.about1}</p>
@@ -335,7 +394,7 @@
       grid.innerHTML = products.map(p => `
         <div onclick="openModal('${p.id}')"
           class="bg-white dark:bg-slate-800 rounded-[40px] overflow-hidden border dark:border-slate-700 shadow-sm hover:shadow-2xl transition duration-500 flex flex-col md:flex-row p-8 cursor-pointer group">
-          <img src="${p.img}" class="w-full md:w-1/3 h-56 object-cover rounded-3xl group-hover:scale-105 transition duration-700" />
+          <img src="${p.img}" class="w-full md:w-1/3 h-60 md:h-56 object-cover object-center rounded-3xl group-hover:scale-105 transition duration-700" />
           <div class="md:pl-8 pt-6 md:pt-0 flex-1">
             <h3 class="text-teal-brand font-black text-3xl uppercase mb-2 text-left">${dict[currentLang][p.key]}</h3>
             <p class="text-navy-brand dark:text-white font-bold text-lg mb-6 text-left">${p.variety}</p>
@@ -354,7 +413,7 @@
 
       document.getElementById('modal-content').innerHTML = `
         <div class="grid md:grid-cols-2 gap-10">
-          <img src="${p.img}" class="rounded-[40px] w-full h-[400px] object-cover shadow-lg" />
+          <img src="${p.img}" class="rounded-[40px] w-full h-[420px] object-contain bg-slate-50 dark:bg-slate-800 shadow-lg p-4" />
           <div>
             <h2 class="text-4xl font-black text-slate-900 dark:text-white uppercase mb-4">${t[p.key]}</h2>
             <p class="text-teal-brand font-bold text-2xl mb-6">${p.variety}</p>
@@ -407,11 +466,6 @@
       document.getElementById('seed-modal').classList.add('hidden');
     }
 
-    function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-      lucide.createIcons();
-    }
-
     function changeLanguage(l) {
       currentLang = l;
       navigateTo(currentPage);
@@ -423,7 +477,8 @@
       cursor.style.top = e.clientY + 'px';
     });
 
-    // initial render
+    // first render icons + page after theme init
+    lucide.createIcons();
     navigateTo('home');
   </script>
 </body>
