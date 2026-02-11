@@ -5,165 +5,577 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BMB EcoNav | Innovative Agricultural Solutions</title>
 
-  <!-- ✅ ONE meta only -->
   <meta name="color-scheme" content="light dark" />
 
-  <!-- ✅ THEME MUST RUN BEFORE TAILWIND LOADS (NO FLASH + CONSISTENT) -->
+  <!-- ✅ THEME BEFORE RENDER -->
   <script>
     (function () {
-      const THEME_KEY = "bmb_theme"; // ✅ single key everywhere
-      const saved = localStorage.getItem(THEME_KEY); // "light" | "dark" | null
-      const theme = saved === "dark" ? "dark" : "light"; // ✅ default always light
-
+      const THEME_KEY = "bmb_theme";
+      const saved = localStorage.getItem(THEME_KEY);
+      const theme = saved === "dark" ? "dark" : "light"; // default light
       const root = document.documentElement;
-      if (theme === "dark") root.classList.add("dark");
-      else root.classList.remove("dark");
-
-      // Helps browser form controls & built-in UI match your theme
+      root.classList.toggle("dark", theme === "dark");
       root.style.colorScheme = theme;
     })();
   </script>
-
-  <!-- ✅ Tailwind config BEFORE tailwind CDN -->
-  <script>
-    tailwind = { config: { darkMode: "class" } };
-  </script>
-  <script src="https://cdn.tailwindcss.com"></script>
 
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-    :root { --bmb-teal: #26B1B1; --bmb-navy: #0D324D; }
 
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      scroll-behavior: smooth;
-      cursor: none;
-      transition: background-color 0.3s, color 0.3s;
+    :root{
+      --bmb-teal:#26B1B1;
+      --bmb-navy:#0D324D;
+
+      --bg:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --card:#ffffff;
+      --border:#e2e8f0;
+
+      --bg-soft:#f8fafc;
+      --shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+      --shadow2: 0 18px 50px rgba(15, 23, 42, 0.16);
     }
 
-    #seed-cursor {
-      width: 20px; height: 20px; background: var(--bmb-teal);
-      border-radius: 50% 0 50% 50%;
-      position: fixed; pointer-events: none;
-      z-index: 10000; transform: rotate(-45deg);
-      transition: transform 0.08s;
-      box-shadow: 0 0 15px rgba(38, 177, 177, 0.5);
+    html.dark{
+      --bg:#081a26;
+      --text:#f1f5f9;
+      --muted:#cbd5e1;
+      --card:#0b2233;
+      --border:#243447;
+      --bg-soft: rgba(15, 23, 42, 0.35);
+      --shadow: 0 20px 60px rgba(0,0,0,0.40);
+      --shadow2: 0 18px 50px rgba(0,0,0,0.55);
     }
 
-    .bg-teal-brand { background-color: var(--bmb-teal); }
-    .text-teal-brand { color: var(--bmb-teal); }
-    .bg-navy-brand { background-color: var(--bmb-navy); }
-    .text-navy-brand { color: var(--bmb-navy); }
-
-    /* Keep only safe dark overrides */
-    .dark nav { background-color: rgba(8, 26, 38, 0.9); border-color: #1e293b; }
-    .dark .bg-slate-50 { background-color: #0a2333; }
-    .dark select option { background-color: #0D324D; color: white; }
-
-    .page-fade { animation: fadeIn 0.4s ease-in-out; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:'Plus Jakarta Sans', sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+      scroll-behavior:smooth;
+      cursor:none;
+      transition: background-color .25s ease, color .25s ease;
     }
 
-    .active-nav { color: var(--bmb-teal) !important; border-bottom: 2px solid var(--bmb-teal); }
+    /* utilities */
+    .container{ max-width: 1120px; margin:0 auto; padding: 0 24px; }
+    .hidden{ display:none !important; }
+    .fade{ animation: fadeIn .35s ease-in-out; }
+    @keyframes fadeIn{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+
+    .btn{
+      border:0; cursor:pointer;
+      padding: 14px 20px;
+      border-radius: 999px;
+      font-weight:800;
+      letter-spacing:.02em;
+      transition: transform .15s ease, opacity .15s ease, background-color .2s ease;
+    }
+    .btn:active{ transform: scale(0.98); }
+    .btn-teal{ background: var(--bmb-teal); color:#fff; }
+    .btn-navy{ background: var(--bmb-navy); color:#fff; border-radius: 18px; padding: 18px 28px; box-shadow: var(--shadow2); }
+    .btn-navy:hover{ background: var(--bmb-teal); }
+
+    /* cursor */
+    #seed-cursor{
+      width:20px; height:20px; background:var(--bmb-teal);
+      border-radius:50% 0 50% 50%;
+      position:fixed; pointer-events:none;
+      z-index:10000; transform:rotate(-45deg);
+      transition: transform .08s;
+      box-shadow:0 0 15px rgba(38, 177, 177, 0.5);
+    }
+
+    /* navbar */
+    .nav{
+      position:fixed; inset:0 0 auto 0;
+      z-index:50;
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      transition: background-color .2s ease, border-color .2s ease;
+    }
+    html.dark .nav{ background: rgba(8,26,38,0.90); }
+    .nav-inner{
+      height: 68px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .logo{ display:flex; align-items:center; gap:12px; text-decoration:none; }
+    .logo img{ height:44px; width:auto; object-fit:contain; }
+
+    .nav-links{
+      display:none;
+      align-items:center;
+      gap:28px;
+      font-weight:800;
+      font-size: 13px;
+    }
+    .nav-links a{
+      color: var(--muted);
+      text-decoration:none;
+      padding-bottom: 6px;
+      transition: color .2s ease;
+    }
+    .nav-links a:hover{ color: var(--bmb-teal); }
+    .nav-links a.active{
+      color: var(--bmb-teal);
+      border-bottom: 2px solid var(--bmb-teal);
+    }
+
+    .nav-actions{ display:flex; align-items:center; gap:10px; }
+    .icon-btn{
+      width:38px; height:38px;
+      border-radius:999px;
+      border:0;
+      cursor:pointer;
+      background: rgba(148,163,184,0.16);
+      display:grid; place-items:center;
+      transition: background .2s ease, transform .15s ease;
+    }
+    .icon-btn:hover{ background: rgba(148,163,184,0.22); }
+    html.dark .icon-btn{ background: rgba(148,163,184,0.16); }
+    html.dark .icon-btn:hover{ background: rgba(148,163,184,0.22); }
+
+    .lang{
+      border: 1px solid var(--border);
+      background: rgba(148,163,184,0.16);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 10px;
+      font-weight:800;
+      font-size: 11px;
+      letter-spacing:.08em;
+      outline:none;
+      text-transform: uppercase;
+    }
+
+    .top-contact{
+      display:none;
+      text-decoration:none;
+      padding: 10px 16px;
+      border-radius:999px;
+      font-weight:800;
+      font-size: 12px;
+      color:#fff;
+      background: var(--bmb-teal);
+      box-shadow: 0 10px 28px rgba(38,177,177,0.35);
+    }
+
+    /* main spacing because nav fixed */
+    main{ padding-top: 96px; min-height: 100vh; }
+
+    /* sections */
+    .hero{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+      align-items:center;
+      padding: 64px 0;
+    }
+    .hero h1{
+      font-size: clamp(40px, 5vw, 72px);
+      line-height: 1.02;
+      margin:0 0 18px;
+      font-weight: 800;
+    }
+    .hero p{
+      margin:0 0 26px;
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 54ch;
+    }
+
+    .hero-img{
+      width:100%;
+      height: 520px;
+      border-radius: 60px;
+      object-fit: cover;
+      object-position: center;
+      border: 16px solid rgba(255,255,255,1);
+      box-shadow: var(--shadow);
+    }
+    html.dark .hero-img{ border-color: rgba(36,52,71,1); }
+
+    /* video */
+    .video{
+      padding: 72px 0;
+      background:#0f172a;
+      text-align:center;
+    }
+    .video h2{ color:#fff; font-size: 28px; margin:0 0 24px; }
+    .video-box{
+      max-width: 896px;
+      margin:0 auto;
+      aspect-ratio: 16/9;
+      border-radius: 28px;
+      overflow:hidden;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+    }
+    .video-box iframe{ width:100%; height:100%; border:0; }
+
+    /* contact form section */
+    .section-soft{
+      padding: 80px 0;
+      background: var(--bg-soft);
+    }
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      box-shadow: var(--shadow);
+      padding: 40px;
+    }
+    .card h2{ margin:0 0 8px; font-size: 28px; font-weight: 800; color: var(--bmb-navy); }
+    html.dark .card h2{ color: var(--text); }
+    .card p{ margin:0 0 22px; color: var(--muted); }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .input, .textarea{
+      width:100%;
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 0;
+      outline:none;
+      background: rgba(148,163,184,0.16);
+      color: var(--text);
+      transition: box-shadow .2s ease, background .2s ease;
+    }
+    .input:focus, .textarea:focus{ box-shadow: 0 0 0 3px rgba(38,177,177,0.35); }
+    .textarea{ resize: vertical; min-height: 110px; }
+
+    /* about */
+    .about{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+      align-items:center;
+      padding: 64px 0;
+    }
+    .about-img{
+      width:100%;
+      height: 700px;
+      border-radius: 40px;
+      object-fit: cover;
+      object-position: top;
+      border: 8px solid rgba(255,255,255,1);
+      box-shadow: var(--shadow);
+    }
+    html.dark .about-img{ border-color: rgba(36,52,71,1); }
+    .about h2{ margin:0 0 16px; font-size: 34px; font-weight: 800; }
+    .about p{ color: var(--muted); font-size: 17px; line-height: 1.7; margin: 0 0 14px; }
+
+    .info-box{
+      margin-top: 18px;
+      padding: 22px;
+      border-left: 8px solid var(--bmb-teal);
+      border-radius: 24px;
+      background: rgba(38,177,177,0.10);
+    }
+    html.dark .info-box{ background: rgba(38,177,177,0.06); }
+    .info-box h4{ margin:0 0 6px; font-size: 18px; color: var(--bmb-navy); }
+    html.dark .info-box h4{ color: var(--bmb-teal); }
+    .info-box p{ margin:0; font-style: italic; color: var(--muted); }
+
+    /* catalog */
+    .catalog{ padding: 44px 0; }
+    .catalog h2{
+      margin:0 0 26px;
+      font-size: 34px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .product{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 24px;
+      display:flex;
+      flex-direction: column;
+      gap: 18px;
+      cursor:pointer;
+      transition: transform .2s ease, box-shadow .25s ease;
+    }
+    .product:hover{ transform: translateY(-2px); box-shadow: var(--shadow2); }
+    .product img{
+      width:100%;
+      height: 240px;
+      border-radius: 28px;
+      object-fit: cover;
+      object-position: center;
+      transition: transform .5s ease;
+    }
+    .product:hover img{ transform: scale(1.04); }
+    .product h3{
+      margin:0 0 6px;
+      color: var(--bmb-teal);
+      font-size: 26px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .product .variety{
+      margin:0 0 10px;
+      color: var(--bmb-navy);
+      font-weight: 800;
+      font-size: 18px;
+    }
+    html.dark .product .variety{ color: var(--text); }
+
+    .detail-btn{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--bmb-teal);
+      background: transparent;
+      border:0;
+      padding:0;
+      cursor:pointer;
+    }
+
+    /* footer */
+    footer{
+      padding: 80px 0 36px;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .footer-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .footer-bio{ color: var(--muted); font-size: 12px; line-height: 1.6; margin: 0 0 16px; }
+    .footer-title{
+      margin:0 0 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--bmb-navy);
+    }
+    html.dark .footer-title{ color: var(--bmb-teal); }
+    .footer-text{ color: var(--muted); margin: 0 0 6px; }
+    .footer-strong{ color: var(--text); font-weight: 800; }
+    .footer-copy{
+      margin-top: 40px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      text-align:center;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .social{ display:flex; gap: 12px; }
+    .social a{ display:inline-flex; transform: scale(1); transition: transform .2s ease; }
+    .social a:hover{ transform: scale(1.08); }
+
+    /* modal */
+    #seed-modal{
+      position:fixed;
+      inset:0;
+      z-index:100;
+      display:none;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      padding: 16px;
+      align-items:center;
+      justify-content:center;
+    }
+    #seed-modal.show{ display:flex; }
+
+    .modal{
+      width:100%;
+      max-width: 980px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      box-shadow: 0 30px 100px rgba(0,0,0,0.50);
+      position:relative;
+      overflow:hidden;
+    }
+    .modal-close{
+      position:absolute;
+      top: 18px;
+      right: 18px;
+      width:44px;
+      height:44px;
+      border-radius: 999px;
+      border:0;
+      cursor:pointer;
+      background: rgba(148,163,184,0.18);
+      display:grid;
+      place-items:center;
+      transition: transform .2s ease;
+      z-index:2;
+    }
+    .modal-close:hover{ transform: rotate(90deg); }
+    .modal-content{
+      padding: 32px;
+      max-height: 85vh;
+      overflow:auto;
+    }
+    .modal-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      align-items:start;
+    }
+    .modal-img{
+      width:100%;
+      height: 420px;
+      border-radius: 40px;
+      object-fit: contain;
+      background: rgba(148,163,184,0.14);
+      padding: 14px;
+    }
+
+    .mono-box{
+      background: rgba(148,163,184,0.12);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 12px 0 18px;
+    }
+    .warn{
+      background: rgba(239, 68, 68, 0.10);
+      border-left: 8px solid rgb(239, 68, 68);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .warn h5{
+      margin:0 0 6px;
+      color: rgb(239, 68, 68);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing:.12em;
+      text-transform: uppercase;
+    }
+    .warn p{ margin:0; color: var(--text); font-size: 12px; line-height: 1.5; opacity: .9; }
+
+    /* responsive */
+    @media (min-width: 768px){
+      .nav-links{ display:flex; }
+      .top-contact{ display:inline-flex; }
+      .hero{ grid-template-columns: 1fr 1fr; }
+      .about{ grid-template-columns: 1fr 1fr; }
+      .form-grid{ grid-template-columns: 1fr 1fr; }
+      .grid{ grid-template-columns: 1fr 1fr; gap: 22px; }
+      .product{ flex-direction: row; align-items:center; }
+      .product img{ width: 34%; height: 224px; }
+      .footer-grid{ grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
+      .modal-grid{ grid-template-columns: 1fr 1fr; gap: 26px; }
+    }
   </style>
 </head>
 
-<body class="bg-white text-slate-900 dark:bg-[#081a26] dark:text-slate-100 overflow-x-hidden">
+<body>
   <div id="seed-cursor"></div>
 
-  <nav class="fixed w-full z-50 bg-white/90 dark:bg-[#081a26]/90 backdrop-blur-lg border-b border-slate-100 dark:border-slate-800 transition-all">
-    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-      <a href="javascript:void(0)" onclick="navigateTo('home')" class="flex items-center">
-        <img src="/assets/logo.png" alt="Logo" class="h-10 md:h-12 w-auto object-contain" />
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="javascript:void(0)" onclick="navigateTo('home')" class="logo">
+        <img src="/assets/logo.png" alt="Logo" />
       </a>
 
-      <div class="hidden md:flex items-center gap-8 font-bold text-sm">
-        <a href="javascript:void(0)" onclick="navigateTo('home')" class="hover:text-teal-brand transition text-slate-700 dark:text-slate-100" id="nav-home">Bosh sahifa</a>
-        <a href="javascript:void(0)" onclick="navigateTo('about')" class="hover:text-teal-brand transition text-slate-700 dark:text-slate-100" id="nav-about">Kompaniya</a>
-        <a href="javascript:void(0)" onclick="navigateTo('catalog')" class="hover:text-teal-brand transition text-slate-700 dark:text-slate-100" id="nav-catalog">Katalog</a>
+      <div class="nav-links">
+        <a href="javascript:void(0)" onclick="navigateTo('home')" id="nav-home">Bosh sahifa</a>
+        <a href="javascript:void(0)" onclick="navigateTo('about')" id="nav-about">Kompaniya</a>
+        <a href="javascript:void(0)" onclick="navigateTo('catalog')" id="nav-catalog">Katalog</a>
       </div>
 
-      <div class="flex items-center gap-3">
-        <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Toggle theme">
-          <i data-lucide="moon" id="theme-icon" class="w-5 h-5 text-teal-brand"></i>
+      <div class="nav-actions">
+        <button onclick="toggleTheme()" class="icon-btn" aria-label="Toggle theme">
+          <i data-lucide="moon" id="theme-icon"></i>
         </button>
 
-        <select id="langSwitcher" onchange="changeLanguage(this.value)"
-          class="bg-slate-100 dark:bg-slate-800 font-bold text-[11px] p-2 rounded-lg outline-none uppercase dark:text-white border dark:border-slate-700">
+        <select id="langSwitcher" onchange="changeLanguage(this.value)" class="lang">
           <option value="uz">UZ</option>
           <option value="ru">RU</option>
           <option value="en">EN</option>
         </select>
 
-        <a href="tel:+998770000233" class="bg-teal-brand text-white px-4 py-2 rounded-full text-xs font-bold hidden sm:block shadow-lg" id="btn-top-contact">
-          Bog'lanish
-        </a>
+        <a href="tel:+998770000233" class="top-contact" id="btn-top-contact">Bog'lanish</a>
       </div>
     </div>
   </nav>
 
-  <main id="page-content" class="min-h-screen pt-24"></main>
+  <main id="page-content"></main>
 
-  <footer class="pt-20 pb-10 bg-white dark:bg-[#081a26] px-6 border-t dark:border-slate-800">
-    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+  <footer>
+    <div class="container footer-grid">
       <div>
-        <img src="/assets/logo.png" class="h-10 mb-6" alt="BMB EcoNav" />
-        <p class="text-xs text-slate-500 dark:text-slate-300 mb-6" id="footer-bio">
-          BMB EcoNav – BMB Holding’ning agrar sohadagi innovatsion qadami.
-        </p>
-        <div class="flex gap-4">
-          <a href="https://t.me/bmbeconav" class="text-[#0088cc] hover:scale-110 transition"><i data-lucide="send"></i></a>
-          <a href="https://instagram.com/bmbeconav" class="text-[#E4405F] hover:scale-110 transition"><i data-lucide="instagram"></i></a>
+        <img src="/assets/logo.png" class="logo-img" style="height:40px;width:auto" alt="BMB EcoNav" />
+        <p class="footer-bio" id="footer-bio">BMB EcoNav – BMB Holding’ning agrar sohadagi innovatsion qadami.</p>
+        <div class="social">
+          <a href="https://t.me/bmbeconav"><i data-lucide="send"></i></a>
+          <a href="https://instagram.com/bmbeconav"><i data-lucide="instagram"></i></a>
         </div>
       </div>
 
-      <div class="space-y-4">
-        <h4 class="font-black text-navy-brand dark:text-teal-brand uppercase text-xs" id="footer-contact-title">Aloqa</h4>
-        <p class="text-sm text-slate-600 dark:text-slate-200" id="footer-address">
-          Toshkent, Yakkasaroy tumani, Kichik Halqa yo'li, 14-B
-        </p>
-        <p class="text-sm font-bold text-slate-900 dark:text-white underline">info@bmb-holding.uz</p>
+      <div>
+        <h4 class="footer-title" id="footer-contact-title">Aloqa</h4>
+        <p class="footer-text" id="footer-address">Toshkent, Yakkasaroy tumani, Kichik Halqa yo'li, 14-B</p>
+        <p class="footer-strong" style="text-decoration: underline;">info@bmb-holding.uz</p>
       </div>
 
-      <div class="space-y-4">
-        <h4 class="font-black text-navy-brand dark:text-teal-brand uppercase text-xs" id="footer-phones-title">Telefonlar</h4>
-        <p class="text-lg font-black text-slate-900 dark:text-white">+998 77 000 02 33</p>
-        <p class="text-lg font-black text-slate-900 dark:text-white">+998 95 014 44 41</p>
+      <div>
+        <h4 class="footer-title" id="footer-phones-title">Telefonlar</h4>
+        <p class="footer-strong">+998 77 000 02 33</p>
+        <p class="footer-strong">+998 95 014 44 41</p>
       </div>
     </div>
 
-    <div class="mt-16 text-center text-[10px] text-slate-400 uppercase tracking-widest border-t pt-8 dark:border-slate-800" id="footer-copy">
+    <div class="container footer-copy" id="footer-copy">
       © 2026 BMB ECO NAV | All Rights Reserved
     </div>
   </footer>
 
-  <div id="seed-modal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-[40px] shadow-2xl relative border dark:border-slate-700">
-      <button onclick="closeModal()" class="absolute top-6 right-6 p-2 bg-slate-100 dark:bg-slate-800 rounded-full z-10 hover:rotate-90 transition-transform" aria-label="Close modal">
-        <i data-lucide="x" class="w-6 h-6 dark:text-white"></i>
+  <div id="seed-modal">
+    <div class="modal">
+      <button onclick="closeModal()" class="modal-close" aria-label="Close modal">
+        <i data-lucide="x"></i>
       </button>
-      <div id="modal-content" class="p-8 md:p-12 overflow-y-auto max-h-[85vh]"></div>
+      <div id="modal-content" class="modal-content"></div>
     </div>
   </div>
 
   <script>
     /***********************
-     * THEME (CLEAN + CONSISTENT)
+     * THEME
      ***********************/
     const THEME_KEY = "bmb_theme";
 
     function setTheme(theme) {
       const root = document.documentElement;
       const isDark = theme === "dark";
-
       root.classList.toggle("dark", isDark);
       root.style.colorScheme = isDark ? "dark" : "light";
       localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
-
       updateThemeIcon();
       lucide.createIcons();
     }
@@ -179,8 +591,6 @@
       const isDark = document.documentElement.classList.contains("dark");
       icon.setAttribute("data-lucide", isDark ? "sun" : "moon");
     }
-
-    // ensure icon matches initial theme (class already set in <head>)
     updateThemeIcon();
 
     /***********************
@@ -192,7 +602,7 @@
     const dict = {
       uz: {
         navHome: "Bosh sahifa", navAbout: "Kompaniya", navCatalog: "Katalog", navContact: "Bog'lanish",
-        heroTitle: "Kelajak – sifatli <span class='text-teal-brand'>urug'dan</span> boshlanadi.",
+        heroTitle: "Kelajak – sifatli <span style='color: var(--bmb-teal)'>urug'dan</span> boshlanadi.",
         heroDesc: "Sifatli urug' yetishtirish, kalibrlash va dorilash bo'yicha zamonaviy yechimlar markazi.",
         btnHero: "Katalogga o'tish", videoTitle: "Biz haqimizda video",
         aboutTitle: "BMB Holding ekotizimida strategik qadam",
@@ -214,7 +624,7 @@
       },
       ru: {
         navHome: "Главная", navAbout: "О нас", navCatalog: "Каталог", navContact: "Связь",
-        heroTitle: "Будущее начинается с качественных <span class='text-teal-brand'>семян</span>.",
+        heroTitle: "Будущее начинается с качественных <span style='color: var(--bmb-teal)'>семян</span>.",
         heroDesc: "Центр современных решений по выращиванию, калибровке и протравливанию семян.",
         btnHero: "Перейти в каталог", videoTitle: "Видео о нас",
         aboutTitle: "Стратегический шаг в экосистеме BMB Holding",
@@ -236,7 +646,7 @@
       },
       en: {
         navHome: "Home", navAbout: "About", navCatalog: "Catalog", navContact: "Contact",
-        heroTitle: "The Future Begins with Quality <span class='text-teal-brand'>Seeds</span>.",
+        heroTitle: "The Future Begins with Quality <span style='color: var(--bmb-teal)'>Seeds</span>.",
         heroDesc: "Center for modern solutions in seed production, calibration, and treatment.",
         btnHero: "Go to Catalog", videoTitle: "Watch Video",
         aboutTitle: "Strategic step in BMB Holding ecosystem",
@@ -266,8 +676,9 @@
     ];
 
     function setActiveNav(page) {
-      document.querySelectorAll('nav a').forEach(el => el.classList.remove('active-nav'));
-      document.getElementById(`nav-${page}`)?.classList.add('active-nav');
+      document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+      const el = document.getElementById(`nav-${page}`);
+      if (el) el.classList.add('active');
     }
 
     function applyFooterTranslations() {
@@ -295,38 +706,39 @@
 
       if (page === 'home') {
         container.innerHTML = `
-          <div class="page-fade">
-            <section class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center py-16">
+          <div class="fade">
+            <section class="container hero">
               <div>
-                <h1 class="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-tight mb-8">${t.heroTitle}</h1>
-                <p class="text-xl text-slate-500 dark:text-slate-300 mb-10">${t.heroDesc}</p>
-                <button onclick="navigateTo('catalog')" class="bg-navy-brand text-white px-10 py-5 rounded-2xl font-bold hover:bg-teal-brand transition shadow-xl">${t.btnHero}</button>
+                <h1>${t.heroTitle}</h1>
+                <p>${t.heroDesc}</p>
+                <button class="btn btn-navy" onclick="navigateTo('catalog')">${t.btnHero}</button>
               </div>
-              <img src="/assets/farmmain.jpg" class="rounded-[60px] shadow-3xl h-[520px] w-full object-cover object-center border-[16px] border-white dark:border-slate-800" />
+              <img src="/assets/farmmain.jpg" class="hero-img" alt="Farm" />
             </section>
 
-            <section class="py-20 bg-slate-900 text-center">
-              <h2 class="text-white text-3xl mb-10">${t.videoTitle}</h2>
-              <div class="max-w-4xl mx-auto aspect-video rounded-3xl overflow-hidden shadow-2xl">
-                <iframe class="w-full h-full" src="https://www.youtube.com/embed/EC17XunxGz0" frameborder="0" allowfullscreen></iframe>
+            <section class="video">
+              <div class="container">
+                <h2>${t.videoTitle}</h2>
+                <div class="video-box">
+                  <iframe src="https://www.youtube.com/embed/EC17XunxGz0" allowfullscreen></iframe>
+                </div>
               </div>
             </section>
 
-            <section class="py-24 bg-slate-50 dark:bg-slate-900/30">
-              <div class="max-w-4xl mx-auto px-6">
-                <div class="bg-white dark:bg-slate-800 p-10 md:p-16 rounded-[50px] shadow-2xl border dark:border-slate-700">
-                  <h2 class="text-3xl font-black text-navy-brand dark:text-white mb-4">${t.formTitle}</h2>
-                  <p class="text-slate-500 dark:text-slate-400 mb-10">${t.formSub}</p>
-                  <form id="tg-form" class="space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
-                      <input type="text" id="inp-name" required placeholder="${t.inpName}"
-                        class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-brand transition" />
-                      <input type="text" id="inp-phone" required placeholder="${t.inpPhone}"
-                        class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-brand transition" />
+            <section class="section-soft">
+              <div class="container" style="max-width: 896px;">
+                <div class="card">
+                  <h2>${t.formTitle}</h2>
+                  <p>${t.formSub}</p>
+                  <form id="tg-form">
+                    <div class="form-grid">
+                      <input type="text" id="inp-name" required placeholder="${t.inpName}" class="input" />
+                      <input type="text" id="inp-phone" required placeholder="${t.inpPhone}" class="input" />
                     </div>
-                    <textarea id="inp-msg" rows="4" placeholder="${t.inpMsg}"
-                      class="w-full p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border-none outline-none text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-brand transition"></textarea>
-                    <button type="submit" class="bg-teal-brand text-white px-10 py-4 rounded-2xl font-bold hover:opacity-90 shadow-lg">${t.btnSubmit}</button>
+                    <textarea id="inp-msg" rows="4" placeholder="${t.inpMsg}" class="textarea"></textarea>
+                    <div style="margin-top:14px;">
+                      <button type="submit" class="btn btn-teal" style="border-radius:18px; padding: 14px 24px;">${t.btnSubmit}</button>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -336,25 +748,28 @@
         bindForm();
       } else if (page === 'about') {
         container.innerHTML = `
-          <div class="page-fade px-6 max-w-6xl mx-auto py-16 grid md:grid-cols-2 gap-16 items-center">
-            <img src="/assets/sobir_aka.webp"
-              class="rounded-[40px] shadow-2xl h-[700px] w-full object-cover object-top border-8 border-white dark:border-slate-800" />
-            <div>
-              <h2 class="text-4xl font-black mb-6 text-slate-900 dark:text-white">${t.aboutTitle}</h2>
-              <p class="text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">${t.about1}</p>
-              <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">${t.about2}</p>
-              <div class="p-8 bg-teal-brand/10 dark:bg-teal-brand/5 rounded-3xl border-l-8 border-teal-brand">
-                <h4 class="font-bold text-navy-brand dark:text-teal-brand text-xl mb-2">${t.dirTitle}</h4>
-                <p class="italic text-slate-500 dark:text-slate-400">${t.dirDesc}</p>
+          <div class="fade">
+            <section class="container about">
+              <img src="/assets/sobir_aka.webp" class="about-img" alt="Director" />
+              <div>
+                <h2>${t.aboutTitle}</h2>
+                <p>${t.about1}</p>
+                <p>${t.about2}</p>
+                <div class="info-box">
+                  <h4>${t.dirTitle}</h4>
+                  <p>${t.dirDesc}</p>
+                </div>
               </div>
-            </div>
+            </section>
           </div>
         `;
       } else if (page === 'catalog') {
         container.innerHTML = `
-          <div class="page-fade px-6 max-w-7xl mx-auto py-12">
-            <h2 class="text-4xl font-black text-slate-900 dark:text-white uppercase mb-12">${t.catHeader}</h2>
-            <div class="grid md:grid-cols-2 gap-10" id="catalog-grid"></div>
+          <div class="fade">
+            <section class="container catalog">
+              <h2>${t.catHeader}</h2>
+              <div class="grid" id="catalog-grid"></div>
+            </section>
           </div>
         `;
         renderCatalog();
@@ -367,14 +782,13 @@
     function renderCatalog() {
       const grid = document.getElementById('catalog-grid');
       grid.innerHTML = products.map(p => `
-        <div onclick="openModal('${p.id}')"
-          class="bg-white dark:bg-slate-800 rounded-[40px] overflow-hidden border dark:border-slate-700 shadow-sm hover:shadow-2xl transition duration-500 flex flex-col md:flex-row p-8 cursor-pointer group">
-          <img src="${p.img}" class="w-full md:w-1/3 h-60 md:h-56 object-cover object-center rounded-3xl group-hover:scale-105 transition duration-700" />
-          <div class="md:pl-8 pt-6 md:pt-0 flex-1">
-            <h3 class="text-teal-brand font-black text-3xl uppercase mb-2 text-left">${dict[currentLang][p.key]}</h3>
-            <p class="text-navy-brand dark:text-white font-bold text-lg mb-6 text-left">${p.variety}</p>
-            <button class="flex items-center gap-2 text-teal-brand font-bold uppercase tracking-widest text-xs">
-              ${dict[currentLang].btnDetail} <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        <div class="product" onclick="openModal('${p.id}')">
+          <img src="${p.img}" alt="${p.key}" />
+          <div style="flex:1;">
+            <h3>${dict[currentLang][p.key]}</h3>
+            <p class="variety">${p.variety}</p>
+            <button class="detail-btn">
+              ${dict[currentLang].btnDetail} <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
             </button>
           </div>
         </div>
@@ -387,28 +801,37 @@
       const t = dict[currentLang];
 
       document.getElementById('modal-content').innerHTML = `
-        <div class="grid md:grid-cols-2 gap-10">
-          <img src="${p.img}" class="rounded-[40px] w-full h-[420px] object-contain bg-slate-50 dark:bg-slate-800 shadow-lg p-4" />
+        <div class="modal-grid">
+          <img src="${p.img}" class="modal-img" alt="${p.key}" />
           <div>
-            <h2 class="text-4xl font-black text-slate-900 dark:text-white uppercase mb-4">${t[p.key]}</h2>
-            <p class="text-teal-brand font-bold text-2xl mb-6">${p.variety}</p>
-            <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-3xl text-sm font-mono text-slate-500 dark:text-slate-300 mb-8 border dark:border-slate-700">
-              ${p.info} <br /> ${p.coating}
+            <h2 style="margin:0 0 8px; font-size:34px; font-weight:800; text-transform:uppercase;">${t[p.key]}</h2>
+            <p style="margin:0 0 10px; color: var(--bmb-teal); font-weight:800; font-size:22px;">${p.variety}</p>
+
+            <div class="mono-box">
+              ${p.info}<br/>${p.coating}
             </div>
-            <h4 class="font-bold mb-4 text-slate-900 dark:text-white uppercase text-sm">${t.recomTitle}</h4>
-            <ul class="space-y-3 text-slate-600 dark:text-slate-300 mb-10">
-              ${t.steps.map(s => `<li>• ${s}</li>`).join('')}
+
+            <h4 style="margin:0 0 10px; font-weight:800; text-transform:uppercase; font-size:12px; letter-spacing:.08em;">
+              ${t.recomTitle}
+            </h4>
+            <ul style="margin:0 0 18px; padding-left: 18px; color: var(--muted);">
+              ${t.steps.map(s => `<li style="margin: 10px 0;">${s}</li>`).join('')}
             </ul>
-            <div class="p-6 bg-red-50 dark:bg-red-900/20 border-l-8 border-red-500 rounded-2xl">
-              <h5 class="text-red-700 dark:text-red-400 font-bold mb-2 uppercase text-xs">${t.important}</h5>
-              <p class="text-xs text-red-800 dark:text-red-200 leading-relaxed">${t.warning}</p>
+
+            <div class="warn">
+              <h5>${t.important}</h5>
+              <p>${t.warning}</p>
             </div>
           </div>
         </div>
       `;
 
-      document.getElementById('seed-modal').classList.remove('hidden');
+      document.getElementById('seed-modal').classList.add('show');
       lucide.createIcons();
+    }
+
+    function closeModal() {
+      document.getElementById('seed-modal').classList.remove('show');
     }
 
     function bindForm() {
@@ -437,10 +860,6 @@
       });
     }
 
-    function closeModal() {
-      document.getElementById('seed-modal').classList.add('hidden');
-    }
-
     function changeLanguage(l) {
       currentLang = l;
       navigateTo(currentPage);
@@ -450,6 +869,11 @@
     document.addEventListener('mousemove', (e) => {
       cursor.style.left = e.clientX + 'px';
       cursor.style.top = e.clientY + 'px';
+    });
+
+    // close modal on outside click
+    document.getElementById('seed-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'seed-modal') closeModal();
     });
 
     lucide.createIcons();
